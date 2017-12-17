@@ -1,7 +1,19 @@
-<h4 *ngIf="auth.isAuthenticated()">
-  You are logged in!
-</h4>
-<h4 *ngIf="!auth.isAuthenticated()">
-  You are not logged in! Please <a (click)="auth.login()">Log In</a> to continue.
-</h4>
+<div *ngIf="!auth.isAuthenticated()">Log in</div>
 
+<ngb-tabset *ngIf="auth.isAuthenticated()">
+  <ngb-tab title="Kandidaten">
+    <ng-template ngbTabContent>
+     <app-kandidaten></app-kandidaten>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Afleveringen">
+    <ng-template ngbTabContent>
+    <app-afleveringen></app-afleveringen>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Test vragen">
+    <ng-template ngbTabContent>
+    <app-testvragen></app-testvragen>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>

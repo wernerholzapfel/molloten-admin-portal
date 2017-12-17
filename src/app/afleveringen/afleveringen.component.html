@@ -1,0 +1,55 @@
+<table class="table" *ngIf="!isEditActive">
+  <thead>
+  <tr>
+    <th scope="col">aflevering</th>
+    <th scope="col">Deadline</th>
+    <th scope="col">is uitgezonden</th>
+    <th scope="col">is laatste aflevering</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let aflevering of afleveringen">
+    <th scope="row">{{aflevering.aflevering}}</th>
+    <td>{{aflevering.deadlineDatetime | date:'d MMMM HH:mm'}}</td>
+    <td>{{aflevering.uitgezonden ? 'Ja' : '-'}}</td>
+    <td>{{aflevering.laatseAflevering ? 'Ja' : '-'}}</td>
+    <td>
+      <button type="button" class="btn btn-primary" (click)="editAflevering(aflevering)">Edit</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+
+<div *ngIf="isEditActive">
+  <form (ngSubmit)="saveAflevering(activeAflevering)">
+    <div class="form-group">
+      <label for="aflevering">Aflevering</label>
+      <input type="number" min="0" max="10" class="form-control" id="aflevering" [(ngModel)]="activeAflevering.aflevering" name="aflevering">
+    </div>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="datetime-local" class="form-check-input" [(ngModel)]="activeAflevering.deadlineDatetime" name="deadlineDatetime">
+        Deadline
+      </label>
+    </div>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" [(ngModel)]="activeAflevering.uitgezonden" name="uitgezonden">
+        Uitgezonden
+      </label>
+    </div>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" [(ngModel)]="activeAflevering.laatseAflevering" name="laatsteAflevering">
+        Laatste Aflevering
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-primary" (click)="cancelAflevering()">Cancel</button>
+
+    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
+  </form>
+
+</div>

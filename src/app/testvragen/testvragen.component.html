@@ -1,0 +1,9 @@
+<div class="form-group">
+  <label for="aflevering">Aflevering</label>
+  <select class="form-control" id="aflevering" #selectedAflevering (change)="fetchTestVragen(selectedAflevering.value)">
+    <option *ngFor="let aflevering of afleveringen" [value]="aflevering.aflevering">
+     aflevering: {{aflevering.aflevering}}
+    </option>
+  </select>
+</div>
+
