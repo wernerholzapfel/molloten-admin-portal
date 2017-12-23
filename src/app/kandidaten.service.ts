@@ -4,12 +4,14 @@ import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
 
 export interface KandidaatModel {
-  'id': string;
-  'display_name': string;
-  'image_url': string;
-  'mol': boolean;
-  'winner': boolean;
-  'aflevering': number;
+  'id'?: string;
+  'display_name'?: string;
+  'image_url'?: string;
+  'mol'?: boolean;
+  'winner'?: boolean;
+  'aflevering'?: number;
+  'afgevallen'?: boolean;
+  'selected'?: boolean;
 }
 
 @Injectable()

@@ -8,7 +8,7 @@ export interface AfleveringModel {
   aflevering: number;
   laatseAflevering: boolean;
   uitgezonden: boolean;
-  deadlineDatetime: Date;
+  deadlineDatetime: string;
 }
 
 @Injectable()

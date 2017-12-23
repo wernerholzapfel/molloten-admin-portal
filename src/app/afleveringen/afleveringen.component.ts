@@ -29,7 +29,7 @@ export class AfleveringenComponent implements OnInit {
   }
 
   saveAflevering() {
-    this.activeAflevering.deadlineDatetime = this.activeAflevering.deadlineDatetime + this.postfixTimezone;
+    this.activeAflevering.deadlineDatetime = moment(this.activeAflevering.deadlineDatetime + this.postfixTimezone).toISOString();
     this.saveafleveringenSub = this.afleveringenService.saveAflevering(this.activeAflevering).subscribe(response => {
       console.log(this.activeAflevering.aflevering + ' is opgeslagen');
       this.isEditActive = false;

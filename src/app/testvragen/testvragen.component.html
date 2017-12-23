@@ -2,8 +2,80 @@
   <label for="aflevering">Aflevering</label>
   <select class="form-control" id="aflevering" #selectedAflevering (change)="fetchTestVragen(selectedAflevering.value)">
     <option *ngFor="let aflevering of afleveringen" [value]="aflevering.aflevering">
-     aflevering: {{aflevering.aflevering}}
+      {{aflevering.aflevering}}
     </option>
   </select>
 </div>
 
+
+<div *ngIf="!showEditMenu">
+  <table class="table" *ngIf="testVragen">
+    <thead>
+    <tr>
+      <th scope="col">Vraag/Antwoord</th>
+      <th scope="col">Kandidaten</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let vraag of testVragen">
+      <tr>
+        <th scope="row">{{vraag.vraag}}</th>
+      </tr>
+      <tr *ngFor="let antwoord of vraag.antwoorden">
+        <th scope="row">{{antwoord.antwoord}}</th>
+        <th scope="row"><span *ngFor="let kandidaat of antwoord.kandidaten">{{kandidaat.display_name}} </span></th>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+
+</div>
+<button *ngIf="activeAflevering" type="button" class="btn btn-primary" (click)="addTestVraag()">Maak vraag voor aflevering {{activeAflevering}}</button>
+
+<div *ngIf="showEditMenu">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Vraag/Antwoord</th>
+      <th scope="col">Kandidaten</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+      <th scope="row">{{form.vraag}}</th>
+    </tr>
+    <tr *ngFor="let antwoord of form.antwoorden">
+      <th scope="row">{{antwoord.antwoord}}</th>
+      <th scope="row"><span *ngFor="let kandidaat of antwoord.kandidaten">{{kandidaat.display_name}} </span>
+        ({{antwoord.kandidaten.length}})
+      </th>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <div class="form-group">
+    <label for="vraag">Vraag</label>
+    <input type="text" class="form-control" id="vraag" [(ngModel)]="form.vraag" name="vraag">
+  </div>
+
+  <div *ngFor="let antwoord of form.antwoorden let i = index">
+    <div class="form-group">
+      <label for="antwoord[i]">Antwoord {{i+1}}</label>
+      <button type="button" class="btn btn-secondary" (click)="deleteAntwoord(i)">delete</button>
+      <input type="text" class="form-control" id="antwoord[i]" [(ngModel)]="form.antwoorden[i].antwoord" name="antwoorden[i]">
+    </div>
+    <div class="form-group">
+      <label for="kandidaten[i]">Kandidaten</label>
+      <select multiple class="form-control" id="kandidaten[i]" #selectedKandidaat[i]
+              [(ngModel)]="form?.antwoorden[i].kandidaten">
+        <option *ngFor="let kandidaat of kandidaten" [value]="kandidaat">
+          {{kandidaat.display_name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary" [disabled]="areAllKandidatenSelected()" (click)="addAntwoord()">+ Antwoord</button>
+  <button type="button" class="btn btn-primary" (click)="cancelVraag()">Annuleren</button>
+  <button type="button" class="btn btn-primary" [disabled]="!areAllKandidatenSelected()" (click)="saveTestVraag()">Sla vraag op</button>
+</div>
