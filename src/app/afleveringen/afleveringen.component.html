@@ -4,6 +4,8 @@
     <th scope="col">aflevering</th>
     <th scope="col">Deadline</th>
     <th scope="col">is uitgezonden</th>
+    <!--<th scope="col">heeft voorspelling</th>-->
+    <!--<th scope="col">heeft test</th>-->
     <th scope="col">is laatste aflevering</th>
     <th scope="col"></th>
   </tr>
@@ -13,6 +15,8 @@
     <th scope="row">{{aflevering.aflevering}}</th>
     <td>{{aflevering.deadlineDatetime | date:'d MMMM HH:mm'}}</td>
     <td>{{aflevering.uitgezonden ? 'Ja' : '-'}}</td>
+    <!--<td>{{aflevering.hasVoorspelling ? 'Ja' : '-'}}</td>-->
+    <!--<td>{{aflevering.hasTest ? 'Ja' : '-'}}</td>-->
     <td>{{aflevering.laatseAflevering ? 'Ja' : '-'}}</td>
     <td>
       <button type="button" class="btn btn-primary" (click)="editAflevering(aflevering)">Edit</button>
@@ -46,6 +50,18 @@
         Laatste Aflevering
       </label>
     </div>
+    <!--<div class="form-check">-->
+      <!--<label class="form-check-label">-->
+        <!--<input type="checkbox" class="form-check-input" [(ngModel)]="activeAflevering.hasVoorspelling" name="hasVoorspelling">-->
+        <!--Heeft voorspelling-->
+      <!--</label>-->
+    <!--</div>-->
+  <!--<div class="form-check">-->
+      <!--<label class="form-check-label">-->
+        <!--<input type="checkbox" class="form-check-input" [(ngModel)]="activeAflevering.hasTest" name="hasTest">-->
+        <!--Heeft test-->
+      <!--</label>-->
+    <!--</div>-->
     <button type="submit" class="btn btn-primary">Save</button>
     <button type="button" class="btn btn-primary" (click)="cancelAflevering()">Cancel</button>
 

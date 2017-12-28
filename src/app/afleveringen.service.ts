@@ -8,8 +8,12 @@ export interface AfleveringModel {
   aflevering: number;
   laatseAflevering: boolean;
   uitgezonden: boolean;
+  hasTest: boolean;
+  hasVoorspelling: boolean;
   deadlineDatetime: string;
+
 }
+
 
 @Injectable()
 export class AfleveringenService {
