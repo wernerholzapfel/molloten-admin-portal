@@ -36,6 +36,11 @@ export class TestvragenService {
       .map(res => <TestvraagModel>res.json());
   }
 
+  updateTestvraag(testVraag: TestvraagModel): Observable<TestvraagModel> {
+    return this.authHttp.post(`${this.api}/quizvragen/update`, testVraag)
+      .map(res => <TestvraagModel>res.json());
+  }
+
   updatevraag(testVraag: TestvraagModel): Observable<TestvraagModel> {
     return this.authHttp.post(`${this.api}/quizvragen/updatevraag`, testVraag)
       .map(res => <TestvraagModel>res.json());

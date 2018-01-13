@@ -39,9 +39,6 @@ export class TestvragenComponent implements OnInit {
   ngOnInit() {
     this.kandidatenSub = this.kandidatenService.getKandidaten().subscribe(response => {
       this.kandidaten = response;
-      this.mutatedKandidaten = _.cloneDeep(this.kandidaten).filter(kandidaat => {
-        return !kandidaat.afgevallen;
-      });
     });
     this.afleveringenSub = this.afleveringenService.getAfleveringen().subscribe(response => {
       this.afleveringen = response;
@@ -55,6 +52,9 @@ export class TestvragenComponent implements OnInit {
   fetchTestVragen(afleveringId) {
     this.activeAflevering = afleveringId;
     this.form.aflevering = afleveringId;
+    this.mutatedKandidaten = _.cloneDeep(this.kandidaten).filter(kandidaat => {
+      return kandidaat.aflevering > afleveringId || !kandidaat.aflevering;
+    });
     this.testvragenSub = this.testvragenService.getTestvragen(afleveringId).subscribe(response => {
       this.testVragen = response;
     });
@@ -68,6 +68,7 @@ export class TestvragenComponent implements OnInit {
   cancelVraag() {
     this.resetTestvraagForm();
     this.showEditMenu = false;
+    this.showEditVraag = false;
   }
 
   addTestVraag() {
@@ -94,10 +95,19 @@ export class TestvragenComponent implements OnInit {
     });
   }
 
+  updateTestVraag() {
+    this.testvragenService.updateTestvraag(this.form).subscribe(response => {
+      this.showEditMenu = false;
+      this.showEditVraag = false;
+      this.fetchTestVragen(this.activeAflevering);
+      this.resetTestvraagForm();
+    });
+  }
+
   editVraag(vraag: TestvraagModel) {
     this.form = vraag;
     this.mutatedKandidaten = _.cloneDeep(this.kandidaten).filter(kandidaat => {
-      return kandidaat.aflevering > vraag.aflevering || !kandidaat.afgevallen;
+      return kandidaat.aflevering > vraag.aflevering || !kandidaat.aflevering;
     });
     this.showEditVraag = true;
   }
@@ -114,8 +124,11 @@ export class TestvragenComponent implements OnInit {
     this.form.antwoorden.forEach(antwoord => {
       selectedKandidaten = selectedKandidaten + antwoord.kandidaten.length;
       antwoord.kandidaten.forEach(kandidaat => {
-        const selectedKandidaat = _.find(this.mutatedKandidaten, {id: kandidaat.id});
+        const selectedKandidaat = _.find(activeKandidaten, {id: kandidaat.id});
         if (selectedKandidaat) {
+          _.remove(activeKandidaten, {
+            id: selectedKandidaat.id
+          });
           kandidaat.selected = true;
           selectedKandidaat.selected = true;
         }
@@ -123,6 +136,11 @@ export class TestvragenComponent implements OnInit {
     });
 
     return (this.mutatedKandidaten.length === selectedKandidaten
-      && (_.filter(this.mutatedKandidaten, {selected: true}).length === this.mutatedKandidaten.length));
+      && activeKandidaten.length === 0
+      && this.form.vraag);
   }
 }
+
+// return (this.kandidaten.length === selectedKandidaten
+//   && (_.filter(mutatedKandidaten, {selected: true}).length === this.kandidaten.length));
+// }
