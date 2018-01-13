@@ -10,7 +10,11 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let kandidaat of kandidaten">
+  <tr *ngFor="let kandidaat of kandidaten let index =index;
+            let isvraagOdd=odd;
+            let isvraagEven=even"
+      [class.rowodd]="isvraagOdd"
+      [class.roweven]="isvraagEven">
     <th scope="row">{{kandidaat.display_name}}</th>
     <td>{{kandidaat.aflevering}}</td>
     <td>{{kandidaat.mol ? 'Ja' : '-'}}</td>

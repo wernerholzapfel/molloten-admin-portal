@@ -11,7 +11,11 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let aflevering of afleveringen">
+  <tr *ngFor="let aflevering of afleveringen let index =index;
+            let isvraagOdd=odd;
+            let isvraagEven=even"
+      [class.rowodd]="isvraagOdd"
+      [class.roweven]="isvraagEven">
     <th scope="row">{{aflevering.aflevering}}</th>
     <td>{{aflevering.deadlineDatetime | date:'d MMMM HH:mm'}}</td>
     <td>{{aflevering.uitgezonden ? 'Ja' : '-'}}</td>

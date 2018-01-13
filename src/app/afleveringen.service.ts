@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AuthHttp} from 'angular2-jwt';
 import {Observable} from 'rxjs/Observable';
+import {environment} from '../environments/environment';
 
 
 export interface AfleveringModel {
@@ -8,8 +9,8 @@ export interface AfleveringModel {
   aflevering: number;
   laatseAflevering: boolean;
   uitgezonden: boolean;
-  hasTest: boolean;
-  hasVoorspelling: boolean;
+  hasTest?: boolean;
+  hasVoorspelling?: boolean;
   deadlineDatetime: string;
 
 }
@@ -18,7 +19,7 @@ export interface AfleveringModel {
 @Injectable()
 export class AfleveringenService {
 
-  api = 'https://molapi.herokuapp.com/api/v1';
+  api = environment.api;
 
   constructor(private authHttp: AuthHttp) {
   }

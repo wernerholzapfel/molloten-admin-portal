@@ -2,3 +2,20 @@
 .btn-margin {
   margin-top: 7px
 }
+
+.headereven {
+  background-color: #b2d0d1;
+}
+
+.headerodd {
+  background-color: #b2d0d1;
+
+}
+
+.roweven {
+  background-color: #e5efef
+}
+
+.rowodd {
+  background-color:#f2f7f7
+}

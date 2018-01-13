@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {AuthHttp} from 'angular2-jwt';
 import {Observable} from 'rxjs/Observable';
 import {KandidaatModel} from './kandidaten.service';
+import {environment} from '../environments/environment';
 
 export interface TestvraagModel {
   id?: number;
@@ -19,8 +20,7 @@ export interface AntwoordModel {
 
 @Injectable()
 export class TestvragenService {
-  api = 'https://molapi.herokuapp.com/api/v1';
-  // api = 'http://localhost:3000/api/v1';
+  api = environment.api;
 
   constructor(private authHttp: AuthHttp) {
   }
@@ -35,5 +35,16 @@ export class TestvragenService {
     return this.authHttp.post(`${this.api}/quizvragen`, testVraag)
       .map(res => <TestvraagModel>res.json());
   }
+
+  updatevraag(testVraag: TestvraagModel): Observable<TestvraagModel> {
+    return this.authHttp.post(`${this.api}/quizvragen/updatevraag`, testVraag)
+      .map(res => <TestvraagModel>res.json());
+  }
+
+  updateAntwoorden(antwoorden: AntwoordModel[]): Observable<TestvraagModel> {
+    return this.authHttp.post(`${this.api}/quizvragen/updateantwoorden`, antwoorden)
+      .map(res => <TestvraagModel>res.json());
+  }
+
 
 }
