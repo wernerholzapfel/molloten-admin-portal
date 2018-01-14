@@ -50,8 +50,8 @@ export class TestvragenComponent implements OnInit {
   }
 
   fetchTestVragen(afleveringId) {
-    this.activeAflevering = afleveringId;
-    this.form.aflevering = afleveringId;
+    this.activeAflevering =  parseInt(afleveringId, 10);
+    this.form.aflevering =  parseInt(afleveringId, 10);
     this.mutatedKandidaten = _.cloneDeep(this.kandidaten).filter(kandidaat => {
       return kandidaat.aflevering > afleveringId || !kandidaat.aflevering;
     });
