@@ -34,12 +34,11 @@ export class TestvragenComponent implements OnInit {
 
   ngOnInit() {
     this.kandidatenSub = this.kandidatenService.getKandidaten().subscribe(response => {
-      this.kandidaten = response.filter(kandidaat => {
-        return !kandidaat.afgevallen;
-      });
+      this.kandidaten = response;
     });
     this.afleveringenSub = this.afleveringenService.getAfleveringen().subscribe(response => {
-      this.afleveringen = response.filter(aflevering => {
+      this.afleveringen = response
+        .filter(aflevering => {
         return !aflevering.uitgezonden;
       });
       this.fetchTestVragen(this.afleveringen[0].aflevering);
@@ -50,8 +49,8 @@ export class TestvragenComponent implements OnInit {
   }
 
   fetchTestVragen(afleveringId) {
-    this.activeAflevering = afleveringId;
-    this.form.aflevering = afleveringId;
+    this.activeAflevering = parseInt(afleveringId, 10);
+    this.form.aflevering = parseInt(afleveringId, 10);
     this.testvragenSub = this.testvragenService.getTestvragen(afleveringId).subscribe(response => {
       this.testVragen = response;
     });
