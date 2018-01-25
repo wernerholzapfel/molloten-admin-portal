@@ -1,17 +1,17 @@
 <div *ngIf="!auth.isAuthenticated()">Log in</div>
 
-<ngb-tabset *ngIf="auth.isAuthenticated() && auth.isAdmin()">
+<ngb-tabset *ngIf="auth.isAuthenticated() && isAdmin">
   <ngb-tab title="Kandidaten">
     <ng-template ngbTabContent>
       <app-kandidaten></app-kandidaten>
     </ng-template>
   </ngb-tab>
-  <ngb-tab title="Afleveringen">
+  <ngb-tab title="Uitzending">
     <ng-template ngbTabContent>
     <app-afleveringen></app-afleveringen>
     </ng-template>
   </ngb-tab>
-  <ngb-tab title="Test vragen">
+  <ngb-tab title="Test">
     <ng-template ngbTabContent>
     <app-testvragen></app-testvragen>
     </ng-template>

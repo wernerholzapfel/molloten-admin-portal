@@ -65,6 +65,7 @@ export class AuthService {
   }
 
   public getProfile(cb): void {
+    if (this.isAuthenticated()) {
     const accessToken = localStorage.getItem('access_token');
     if (!accessToken) {
       throw new Error('Access token must exist to fetch profile');
@@ -77,12 +78,13 @@ export class AuthService {
       }
       cb(err, profile);
     });
+    }
   }
 
-  public isAdmin(): boolean {
-    return this.userProfile && this.userProfile.name === 'werner.holzapfel@gmail.com';
-    // return this.userProfile && this.userProfile.app_metadata
-    //   && this.userProfile.app_metadata.roles
-    //   && this.userProfile.app_metadata.roles.indexOf('admin') > -1;
-  }
+  // public determineIfIsAdmin(): boolean {
+  //   return this.userProfile && this.userProfile.name === 'werner.holzapfel@gmail.com';
+  //   // return this.userProfile && this.userProfile.app_metadata
+  //   //   && this.userProfile.app_metadata.roles
+  //   //   && this.userProfile.app_metadata.roles.indexOf('admin') > -1;
+  // }
 }
