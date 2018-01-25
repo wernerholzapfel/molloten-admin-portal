@@ -5,5 +5,5 @@
 
 export const environment = {
   production: true,
-  api: 'http://molapi.herokuapp.com/api/v1'
+  api: 'https://molapi.herokuapp.com/api/v1'
 };
