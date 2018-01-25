@@ -11,7 +11,7 @@ import {ROUTES} from './app.routes';
 
 import {AuthService} from './auth/auth.service';
 import {CallbackComponent} from './callback/callback.component';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+// import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {KandidatenComponent} from './kandidaten/kandidaten.component';
 import {AfleveringenComponent} from './afleveringen/afleveringen.component';
 import {TestvragenComponent} from './testvragen/testvragen.component';
@@ -43,7 +43,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     FormsModule,
     HttpModule,
     RouterModule.forRoot(ROUTES),
-    NgbModule.forRoot()
+    // NgbModule.forRoot()
   ],
   providers: [AuthService,
     {
