@@ -1,6 +1,6 @@
 <div *ngIf="!auth.isAuthenticated()">Log in</div>
 
-<ngb-tabset *ngIf="auth.isAuthenticated()">
+<ngb-tabset *ngIf="auth.isAuthenticated() && auth.isAdmin()">
   <ngb-tab title="Kandidaten">
     <ng-template ngbTabContent>
       <app-kandidaten></app-kandidaten>
@@ -14,6 +14,11 @@
   <ngb-tab title="Test vragen">
     <ng-template ngbTabContent>
     <app-testvragen></app-testvragen>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Actie">
+    <ng-template ngbTabContent>
+    <app-acties></app-acties>
     </ng-template>
   </ngb-tab>
 </ngb-tabset>
