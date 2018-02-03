@@ -1,3 +1,5 @@
+<ngb-alert *ngIf="alert?.message" type="{{alert.type}}" (close)="alert.message = null">{{ alert?.message }}</ngb-alert>
+
 <table class="table" *ngIf="!isEditActive">
   <thead>
   <tr>

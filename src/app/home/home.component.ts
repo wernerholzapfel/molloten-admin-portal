@@ -15,15 +15,14 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     if (this.auth.userProfile) {
       this.profile = this.auth.userProfile;
-      this.isAdmin = (this.auth.userProfile && this.auth.userProfile === 'werner.holzapfel@gmail.com');
+      this.isAdmin = this.auth.userProfile &&
+        (this.auth.userProfile === 'werner.holzapfel@gmail.com' || this.auth.userProfile === 'tom.dijkerman@gmail.com');
     } else {
       this.auth.getProfile((err, profile) => {
         this.profile = profile;
-        this.isAdmin = (profile && profile.name === 'werner.holzapfel@gmail.com');
-
+        this.isAdmin = profile &&
+          (profile.name === 'werner.holzapfel@gmail.com' || profile.name === 'tom.dijkerman@gmail.com');
       });
     }
-
   }
-
 }
