@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from './../auth/auth.service';
+import {Component, OnInit} from '@angular/core';
+import {AuthService} from './../auth/auth.service';
+import {IAlert} from '../kandidaten/kandidaten.component';
 
 @Component({
   selector: 'app-home',
@@ -9,8 +10,10 @@ import { AuthService } from './../auth/auth.service';
 export class HomeComponent implements OnInit {
   profile: any;
   isAdmin: boolean;
+  public alerts: Array<IAlert> = [];
 
-  constructor(public auth: AuthService) { }
+  constructor(public auth: AuthService) {
+  }
 
   ngOnInit() {
     if (this.auth.userProfile) {
@@ -24,5 +27,14 @@ export class HomeComponent implements OnInit {
           (profile.name === 'werner.holzapfel@gmail.com' || profile.name === 'tom.dijkerman@gmail.com');
       });
     }
+  }
+
+  public closeAlert(alert: IAlert) {
+    const index: number = this.alerts.indexOf(alert);
+    this.alerts.splice(index, 1);
+  }
+
+  public addAlertTo($event) {
+    this.alerts.push($event);
   }
 }

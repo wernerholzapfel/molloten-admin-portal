@@ -1,14 +1,18 @@
 <div *ngIf="!auth.isAuthenticated()">Log in</div>
 
+<p *ngFor="let alert of alerts">
+<ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+</p>
+
 <ngb-tabset *ngIf="auth.isAuthenticated() && isAdmin">
   <ngb-tab title="Kandidaten">
     <ng-template ngbTabContent>
-      <app-kandidaten></app-kandidaten>
+      <app-kandidaten (addAlert)="addAlertTo($event)"></app-kandidaten>
     </ng-template>
   </ngb-tab>
   <ngb-tab title="Uitzending">
     <ng-template ngbTabContent>
-    <app-afleveringen></app-afleveringen>
+    <app-afleveringen (addAlert)="addAlertTo($event)"></app-afleveringen>
     </ng-template>
   </ngb-tab>
   <ngb-tab title="Test">
@@ -18,7 +22,7 @@
   </ngb-tab>
   <ngb-tab title="Actie">
     <ng-template ngbTabContent>
-    <app-acties></app-acties>
+    <app-acties (addAlert)="addAlertTo($event)"></app-acties>
     </ng-template>
   </ngb-tab>
 </ngb-tabset>

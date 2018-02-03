@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
 import {AfleveringenService, AfleveringModel} from '../afleveringen.service';
 import * as moment from 'moment';
@@ -19,8 +19,8 @@ export class AfleveringenComponent implements OnInit {
   activeAflevering: AfleveringModel;
   date: string;
   postfixTimezone: any;
-  @Input()
-  public alerts: Array<IAlert> = [];
+  @Output()
+  addAlert: EventEmitter<IAlert> = new EventEmitter<IAlert>(); // creating an output event
 
 
   constructor(private afleveringenService: AfleveringenService) {
@@ -31,7 +31,7 @@ export class AfleveringenComponent implements OnInit {
       this.afleveringen = response;
     },
       error => {
-        this.alerts.push({
+        this.addAlert.emit({
           message: 'Het ophalen van de uitzendingen is niet gelukt',
           type: 'danger'});
       });
@@ -42,7 +42,7 @@ export class AfleveringenComponent implements OnInit {
 
     this.activeAflevering.deadlineDatetime = moment(this.activeAflevering.deadlineDatetime + this.postfixTimezone).toISOString();
     this.saveafleveringenSub = this.afleveringenService.saveAflevering(this.activeAflevering).subscribe(response => {
-        this.alerts.push({
+        this.addAlert.emit({
           message: 'Het opslaan van de uitzending is gelukt',
           type: 'success'
         });
@@ -50,7 +50,7 @@ export class AfleveringenComponent implements OnInit {
         this.activeAflevering = null;
       },
       error => {
-        this.alerts.push({
+        this.addAlert.emit({
           message: 'Het opslaan van de uitzending is niet gelukt',
           type: 'danger'});
       });
@@ -68,10 +68,4 @@ export class AfleveringenComponent implements OnInit {
     this.isEditActive = false;
     this.activeAflevering = null;
   }
-
-  public closeAlert(alert: IAlert) {
-    const index: number = this.alerts.indexOf(alert);
-    this.alerts.splice(index, 1);
-  }
-
 }
