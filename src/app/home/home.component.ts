@@ -2,9 +2,9 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AuthService} from './../auth/auth.service';
 import {IAlert} from '../interface/IAlert';
 import {Store} from '@ngrx/store';
-import {IAppState} from '../store';
+import {IAppState} from '../store/store';
 import {Observable} from 'rxjs/Observable';
-import {DeleteErrorMessage} from '../actions';
+import {DeleteAlert} from '../store/alerts/alerts.actions';
 
 @Component({
   selector: 'app-home',
@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.alerts$ = this.store.select('errors');
+    this.alerts$ = this.store.select('alerts');
     if (this.auth.userProfile) {
       this.profile = this.auth.userProfile;
       this.isAdmin = this.auth.userProfile &&
@@ -36,6 +36,6 @@ export class HomeComponent implements OnInit {
   }
 
   public closeAlert(alert: IAlert) {
-    this.store.dispatch(new DeleteErrorMessage(alert));
+    this.store.dispatch(new DeleteAlert(alert));
   }
 }

@@ -1,12 +1,12 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {KandidatenService} from '../kandidaten.service';
 import {IKandidaat} from '../interface/IKandidaat';
-import {IAppState} from '../store';
+import {IAppState} from '../store/store';
 import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {IAlert} from '../interface/IAlert';
 import {Subscription} from 'rxjs/Subscription';
-import {UpdateKandidaatInProgress} from '../actions';
+import {UpdateKandidaatInProgress} from '../store/kandidaten/kandidaten.actions';
 
 @Component({
   selector: 'app-kandidaten',

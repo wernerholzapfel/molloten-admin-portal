@@ -22,18 +22,12 @@ import {AfleveringenService} from './afleveringen.service';
 import {ActiesComponent} from './acties/acties.component';
 import {ActiesService} from './acties.service';
 
-import {IAppState, reducers} from './store';
-import {MetaReducer, State, Store, StoreModule} from '@ngrx/store';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-// import { RouterStateSerializer, StoreRouterConnectingModule } from '@ngrx/router-store';
-import { EffectsModule } from '@ngrx/effects';
-import {Effects} from './effects';
-
-// import {NgRedux, NgReduxModule, DevToolsExtension} from '@angular-redux/store';
-// import {NgrxSelect} from 'ngrx-actions';
-// import {Store} from 'redux';
-// import {StoreModule} from '@ngrx/store';
-// import {StoreDevtoolsModule} from 'ngrx-store-devtools';
+import {IAppState, reducers} from './store/store';
+import {Store, StoreModule} from '@ngrx/store';
+import {StoreDevtoolsModule} from '@ngrx/store-devtools';
+import {EffectsModule} from '@ngrx/effects';
+import {KandidatenEffects} from './store/kandidaten/kandidaten.effects';
+import {AfleveringenEffects} from './store/afleveringen/afleveringen.effects';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
@@ -62,7 +56,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument(),
     // StoreRouterConnectingModule,
-    EffectsModule.forRoot([Effects])
+    EffectsModule.forRoot([AfleveringenEffects, KandidatenEffects]),
 
   ],
   providers: [AuthService,
@@ -86,7 +80,7 @@ export class AppModule {
 
     // You probably only want to expose this tool in devMode.
 
-      // enhancers = [ ...enhancers, devTools.enhancer() ];
+    // enhancers = [ ...enhancers, devTools.enhancer() ];
 
     // this.store.configureStore(
     //   rootReducer,
