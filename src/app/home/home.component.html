@@ -1,18 +1,18 @@
 <div *ngIf="!auth.isAuthenticated()">Log in</div>
 
-<p *ngFor="let alert of alerts">
+<p *ngFor="let alert of alerts$ | async">
 <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
 </p>
 
 <ngb-tabset *ngIf="auth.isAuthenticated() && isAdmin">
   <ngb-tab title="Kandidaten">
     <ng-template ngbTabContent>
-      <app-kandidaten (addAlert)="addAlertTo($event)"></app-kandidaten>
+      <app-kandidaten></app-kandidaten>
     </ng-template>
   </ngb-tab>
   <ngb-tab title="Uitzending">
     <ng-template ngbTabContent>
-    <app-afleveringen (addAlert)="addAlertTo($event)"></app-afleveringen>
+    <app-afleveringen></app-afleveringen>
     </ng-template>
   </ngb-tab>
   <ngb-tab title="Test">

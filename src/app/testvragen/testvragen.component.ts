@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {Subscription} from 'rxjs/Subscription';
-import {KandidaatModel, KandidatenService} from '../kandidaten.service';
-import {AfleveringenService, AfleveringModel} from '../afleveringen.service';
+import {KandidatenService} from '../kandidaten.service';
+import {AfleveringenService} from '../afleveringen.service';
 import {AntwoordModel, TestvraagModel, TestvragenService} from '../testvragen.service';
 import * as _ from 'lodash';
+import {IKandidaat} from '../interface/IKandidaat';
+import {IAflevering} from '../interface/IAflevering';
 
 @Component({
   selector: 'app-testvragen',
@@ -13,10 +15,10 @@ import * as _ from 'lodash';
 export class TestvragenComponent implements OnInit {
   testvragenSub: Subscription;
   kandidatenSub: Subscription;
-  kandidaten: KandidaatModel[];
-  mutatedKandidaten: KandidaatModel[];
+  kandidaten: IKandidaat[];
+  mutatedKandidaten: IKandidaat[];
   afleveringenSub: Subscription;
-  afleveringen: AfleveringModel[];
+  afleveringen: IAflevering[];
   activeAflevering: number;
   testVragen: any;
   currentAflevering: number;

@@ -1,67 +1,48 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
-import {AfleveringenService, AfleveringModel} from '../afleveringen.service';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import * as moment from 'moment';
 import 'moment/locale/nl';
-import {IAlert} from '../kandidaten/kandidaten.component';
+import {IAflevering} from '../interface/IAflevering';
+import {IAppState} from '../store';
+import {UpdateAfleveringInProgress} from '../actions';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-afleveringen',
   templateUrl: './afleveringen.component.html',
-  styleUrls: ['./afleveringen.component.css']
+  styleUrls: ['./afleveringen.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AfleveringenComponent implements OnInit {
 
-  saveafleveringenSub: Subscription;
-  afleveringenSub: Subscription;
-  afleveringen: AfleveringModel[];
+  afleveringen$: Observable<IAflevering[]>;
   isEditActive: boolean;
-  activeAflevering: AfleveringModel;
+  activeAflevering: IAflevering;
   date: string;
   postfixTimezone: any;
-  @Output()
-  addAlert: EventEmitter<IAlert> = new EventEmitter<IAlert>(); // creating an output event
 
-
-  constructor(private afleveringenService: AfleveringenService) {
+  constructor(private store: Store<IAppState>) {
   }
 
   ngOnInit() {
-    this.afleveringenSub = this.afleveringenService.getAfleveringen().subscribe(response => {
-      this.afleveringen = response;
-    },
-      error => {
-        this.addAlert.emit({
-          message: 'Het ophalen van de uitzendingen is niet gelukt',
-          type: 'danger'});
-      });
+    this.afleveringen$ = this.store.select('afleveringen');
   }
 
   saveAflevering() {
     this.isEditActive = false;
 
     this.activeAflevering.deadlineDatetime = moment(this.activeAflevering.deadlineDatetime + this.postfixTimezone).toISOString();
-    this.saveafleveringenSub = this.afleveringenService.saveAflevering(this.activeAflevering).subscribe(response => {
-        this.addAlert.emit({
-          message: 'Het opslaan van de uitzending is gelukt',
-          type: 'success'
-        });
-        console.log(this.activeAflevering.aflevering + ' is opgeslagen');
-        this.activeAflevering = null;
-      },
-      error => {
-        this.addAlert.emit({
-          message: 'Het opslaan van de uitzending is niet gelukt',
-          type: 'danger'});
-      });
+
+    this.store.dispatch(new UpdateAfleveringInProgress(this.activeAflevering));
   }
 
   editAflevering(aflevering) {
     this.isEditActive = true;
     const localTimezone = moment(aflevering.deadlineDatetime).format().slice(0, 16);
     this.postfixTimezone = moment(aflevering.deadlineDatetime).format().slice(16);
-    aflevering.deadlineDatetime = localTimezone;
-    this.activeAflevering = aflevering;
+    this.activeAflevering = _.cloneDeep(aflevering);
+    this.activeAflevering.deadlineDatetime = localTimezone;
   }
 
   cancelAflevering(aflevering) {

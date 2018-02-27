@@ -1,6 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AuthService} from './../auth/auth.service';
-import {IAlert} from '../kandidaten/kandidaten.component';
+import {IAlert} from '../interface/IAlert';
+import {Store} from '@ngrx/store';
+import {IAppState} from '../store';
+import {Observable} from 'rxjs/Observable';
+import {DeleteErrorMessage} from '../actions';
 
 @Component({
   selector: 'app-home',
@@ -10,12 +14,14 @@ import {IAlert} from '../kandidaten/kandidaten.component';
 export class HomeComponent implements OnInit {
   profile: any;
   isAdmin: boolean;
-  public alerts: Array<IAlert> = [];
+  alerts$: Observable<IAlert[]>;
+  changeDetection: ChangeDetectionStrategy.OnPush;
 
-  constructor(public auth: AuthService) {
+  constructor(public auth: AuthService, private store: Store<IAppState>) {
   }
 
   ngOnInit() {
+    this.alerts$ = this.store.select('errors');
     if (this.auth.userProfile) {
       this.profile = this.auth.userProfile;
       this.isAdmin = this.auth.userProfile &&
@@ -30,11 +36,6 @@ export class HomeComponent implements OnInit {
   }
 
   public closeAlert(alert: IAlert) {
-    const index: number = this.alerts.indexOf(alert);
-    this.alerts.splice(index, 1);
-  }
-
-  public addAlertTo($event) {
-    this.alerts.push($event);
+    this.store.dispatch(new DeleteErrorMessage(alert));
   }
 }

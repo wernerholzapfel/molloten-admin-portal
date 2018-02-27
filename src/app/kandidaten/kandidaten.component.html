@@ -10,7 +10,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let kandidaat of kandidaten let index =index;
+  <tr *ngFor="let kandidaat of kandidaten$ | async let index =index;
             let isvraagOdd=odd;
             let isvraagEven=even"
       [class.rowodd]="isvraagOdd"

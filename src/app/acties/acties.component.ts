@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {ActiesModel, ActiesService} from '../acties.service';
 import {Subscription} from 'rxjs/Subscription';
-import {IAlert} from '../kandidaten/kandidaten.component';
+import {IAlert} from '../interface/IAlert';
 
 @Component({
   selector: 'app-acties',
@@ -14,9 +14,6 @@ export class ActiesComponent implements OnInit {
   actiesSub: Subscription;
   acties: ActiesModel = {};
 
-  @Output()
-  addAlert: EventEmitter<IAlert> = new EventEmitter<IAlert>(); // creating an output event
-
   constructor(private actiesService: ActiesService) { }
 
   ngOnInit() {
@@ -24,24 +21,25 @@ export class ActiesComponent implements OnInit {
       this.acties = response;
     },
       error => {
-        this.addAlert.emit({
-          message: 'Het ophalen van de acties is niet gelukt',
-          type: 'danger'});
+     console.log('ophalen niet gelukt');
+      //   this.addAlert.emit({
+      //     message: 'Het ophalen van de acties is niet gelukt',
+      //     type: 'danger'});
       });
   }
 
   saveActies() {
     this.saveActiesSub = this.actiesService.saveActies(this.acties).subscribe(response => {
       console.log('saved actie');
-      this.addAlert.emit({
-        message: 'Het opslaan van de acties is gelukt',
-        type: 'success'
-      });
-    },
+      // this.addAlert.emit({
+      //   message: 'Het opslaan van de acties is gelukt',
+      //   type: 'success'
+      },
       error => {
-        this.addAlert.emit({
-          message: 'Het opslaan van de acties is niet gelukt',
-          type: 'danger'});
-      });
+        console.log('opslaan mislukt');
+        // this.addAlert.emit({
+        //   message: 'Het opslaan van de acties is niet gelukt',
+        //   type: 'danger'});
+    });
   }
 }

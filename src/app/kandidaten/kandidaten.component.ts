@@ -1,35 +1,35 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {KandidatenService} from '../kandidaten.service';
+import {IKandidaat} from '../interface/IKandidaat';
+import {IAppState} from '../store';
+import {Store} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {IAlert} from '../interface/IAlert';
 import {Subscription} from 'rxjs/Subscription';
-import {KandidaatModel, KandidatenService} from '../kandidaten.service';
 
 @Component({
   selector: 'app-kandidaten',
   templateUrl: './kandidaten.component.html',
-  styleUrls: ['./kandidaten.component.css']
+  styleUrls: ['./kandidaten.component.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 
+
 export class KandidatenComponent implements OnInit {
-  kandidatenSub: Subscription;
-  kandidaten: KandidaatModel[];
   saveKandidatenSub: Subscription;
+  kandidaten$: Observable<IKandidaat[]>;
   isEditActive: boolean;
-  activeKandidaat: KandidaatModel;
+  activeKandidaat: IKandidaat;
 
   @Output()
   addAlert: EventEmitter<IAlert> = new EventEmitter<IAlert>(); // creating an output event
 
-  constructor(private kandidatenService: KandidatenService) {
+  constructor(private kandidatenService: KandidatenService, private store: Store<IAppState>) {
   }
 
   ngOnInit() {
-    this.kandidatenSub = this.kandidatenService.getKandidaten().subscribe(response => {
-      this.kandidaten = response;
-    },
-      error => {
-        this.addAlert.emit({
-          message: 'Het ophalen van de kandidaten is niet gelukt',
-          type: 'danger'});
-      });
+    this.kandidaten$ = this.store.select('kandidaten');
   }
 
   saveKandidaat() {
@@ -39,14 +39,16 @@ export class KandidatenComponent implements OnInit {
         console.log(this.activeKandidaat.display_name + ' is opgeslagen');
         this.addAlert.emit({
           message: 'Het opslaan van de kandidaat is gelukt',
-          type: 'success'
+          type: 'success',
+          err: undefined
         });
         this.activeKandidaat = null;
       },
       error => {
         this.addAlert.emit({
           message: 'Het opslaan van de kandidaat is niet gelukt',
-          type: 'danger'
+          type: 'danger',
+          err: error
         });
       });
   }
@@ -60,9 +62,4 @@ export class KandidatenComponent implements OnInit {
     this.isEditActive = false;
     this.activeKandidaat = null;
   }
-}
-
-export interface IAlert {
-  type: string;
-  message: string;
 }

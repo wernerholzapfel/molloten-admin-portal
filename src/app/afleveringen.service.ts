@@ -2,18 +2,7 @@ import {Injectable} from '@angular/core';
 import {AuthHttp} from 'angular2-jwt';
 import {Observable} from 'rxjs/Observable';
 import {environment} from '../environments/environment';
-
-
-export interface AfleveringModel {
-  id: string;
-  aflevering: number;
-  laatseAflevering: boolean;
-  uitgezonden: boolean;
-  hasTest?: boolean;
-  hasVoorspelling?: boolean;
-  deadlineDatetime: string;
-
-}
+import {IAflevering} from './interface/IAflevering';
 
 
 @Injectable()
@@ -24,12 +13,12 @@ export class AfleveringenService {
   constructor(private authHttp: AuthHttp) {
   }
 
-  getAfleveringen(): Observable<AfleveringModel[]> {
+  getAfleveringen(): Observable<IAflevering[]> {
     return this.authHttp.get(`${this.api}/afleveringen`)
-      .map(res => <AfleveringModel[]>res.json());
+      .map(res => <IAflevering[]>res.json());
   }
 
-  saveAflevering(aflevering: AfleveringModel): Observable<any> {
+  saveAflevering(aflevering: IAflevering): Observable<any> {
     return this.authHttp.post(`${this.api}/afleveringen`, aflevering);
   }
 

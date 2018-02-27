@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {AuthHttp} from 'angular2-jwt';
 import {Observable} from 'rxjs/Observable';
-import {KandidaatModel} from './kandidaten.service';
+import {IKandidaat} from './interface/IKandidaat';
 import {environment} from '../environments/environment';
 
 export interface TestvraagModel {
@@ -15,7 +15,7 @@ export interface TestvraagModel {
 export interface AntwoordModel {
   'id'?: number;
   'antwoord': string;
-  'kandidaten': KandidaatModel[];
+  'kandidaten': IKandidaat[];
 }
 
 @Injectable()
