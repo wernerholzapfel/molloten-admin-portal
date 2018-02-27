@@ -3,12 +3,21 @@ import {Actions, Effect} from '@ngrx/effects';
 import {
   AddErrorMessage,
   FETCH_AFLEVERINGEN_IN_PROGRESS,
-  FETCH_KANDIDATEN_IN_PROGRESS, FetchAfleveringenFailure, FetchAfleveringenInProgress, FetchAfleveringenSuccess,
+  FETCH_KANDIDATEN_IN_PROGRESS,
+  FetchAfleveringenFailure,
+  FetchAfleveringenInProgress,
+  FetchAfleveringenSuccess,
   FetchKandidatenFailure,
   FetchKandidatenInProgress,
-  FetchKandidatenSuccess, UPDATE_AFLEVERING_IN_PROGRESS, UPDATE_KANDIDAAT_IN_PROGRESS, UpdateAfleveringFailure,
+  FetchKandidatenSuccess,
+  UPDATE_AFLEVERING_IN_PROGRESS,
+  UPDATE_KANDIDAAT_IN_PROGRESS,
+  UpdateAfleveringFailure,
   UpdateAfleveringInProgress,
-  UpdateAfleveringSuccess, UpdateKandidaatFailure, UpdateKandidaatInProgress, UpdateKandidaatSuccess
+  UpdateAfleveringSuccess,
+  UpdateKandidaatFailure,
+  UpdateKandidaatInProgress,
+  UpdateKandidaatSuccess
 } from './actions';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
@@ -62,10 +71,11 @@ export class Effects {
     .switchMap((aflevering: IAflevering) => {
       return this.afleveringenService
         .saveAflevering(aflevering)
-        .switchMap(response => [
-          Observable.of(new UpdateAfleveringSuccess(aflevering))
-          ]
-        )
+        .switchMap(() =>
+          Observable.from([
+            new UpdateAfleveringSuccess(aflevering),
+            new AddErrorMessage({type: 'success', message: 'Opslaan van aflevering gelukt', err: undefined})
+          ]))
         .catch(err =>
           Observable.from([
             new UpdateAfleveringFailure(),
@@ -73,16 +83,15 @@ export class Effects {
           ]));
     });
 
- @Effect()
+  @Effect()
   updateKandidaatInProgress$ = this.actions$
     .ofType<UpdateKandidaatInProgress>(UPDATE_KANDIDAAT_IN_PROGRESS)
     .map(action => action.payload)
     .switchMap((kandidaat: IKandidaat) => {
       return this.kandidatenService
         .saveKandidaat(kandidaat)
-        .switchMap(response => [
-          Observable.of(new UpdateKandidaatSuccess(kandidaat))
-          ]
+        .switchMap(response =>
+            Observable.of(new UpdateKandidaatSuccess(kandidaat))
         )
         .catch(err =>
           Observable.from([
@@ -93,5 +102,6 @@ export class Effects {
 
   constructor(private actions$: Actions,
               private kandidatenService: KandidatenService,
-              private afleveringenService: AfleveringenService) {}
+              private afleveringenService: AfleveringenService) {
+  }
 }

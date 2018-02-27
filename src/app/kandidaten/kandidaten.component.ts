@@ -6,6 +6,7 @@ import {Store} from '@ngrx/store';
 import {Observable} from 'rxjs/Observable';
 import {IAlert} from '../interface/IAlert';
 import {Subscription} from 'rxjs/Subscription';
+import {UpdateKandidaatInProgress} from '../actions';
 
 @Component({
   selector: 'app-kandidaten',
@@ -34,23 +35,7 @@ export class KandidatenComponent implements OnInit {
 
   saveKandidaat() {
     this.isEditActive = false;
-
-    this.saveKandidatenSub = this.kandidatenService.saveKandidaat(this.activeKandidaat).subscribe(response => {
-        console.log(this.activeKandidaat.display_name + ' is opgeslagen');
-        this.addAlert.emit({
-          message: 'Het opslaan van de kandidaat is gelukt',
-          type: 'success',
-          err: undefined
-        });
-        this.activeKandidaat = null;
-      },
-      error => {
-        this.addAlert.emit({
-          message: 'Het opslaan van de kandidaat is niet gelukt',
-          type: 'danger',
-          err: error
-        });
-      });
+    this.store.dispatch(new UpdateKandidaatInProgress(this.activeKandidaat));
   }
 
   editKandidaat(kandidaat) {

@@ -13,6 +13,7 @@ import {
 import {ActionReducerMap} from '@ngrx/store';
 import {IAlert} from './interface/IAlert';
 
+
 export interface IAppState {
   counter: number;
   kandidaten: IKandidaat[];

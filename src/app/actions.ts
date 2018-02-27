@@ -19,7 +19,6 @@ export const UPDATE_AFLEVERING_FAILURE = 'UPDATE_AFLEVERING_FAILURE';
 export const DELETE_ERROR_MESSAGE = 'DELETE_ERROR_MESSAGE';
 export const ADD_ERROR_MESSAGE = 'ADD_ERROR_MESSAGE';
 
-
 export const INCREMENT = 'INCREMENT';
 
 export class FetchKandidatenInProgress implements Action {
@@ -135,5 +134,8 @@ export type All =
   | FetchAfleveringenFailure
   | UpdateAfleveringInProgress
   | UpdateAfleveringSuccess
-  | UpdateAfleveringFailure;
+  | UpdateAfleveringFailure
+  | UpdateKandidaatInProgress
+  | UpdateKandidaatSuccess
+  | UpdateKandidaatFailure;
 
