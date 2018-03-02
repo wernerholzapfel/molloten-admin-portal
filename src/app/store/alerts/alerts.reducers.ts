@@ -6,8 +6,8 @@ export function alertReducer(state: IAlert[] = [], action) {
     case ADD_ALERT:
       return [...state, action.payload];
     case DELETE_ALERT:
-      return state.filter(t => t !== action.payload);
+      return [...state.filter(t => t !== action.payload)];
     default:
-      return state;
+      return [...state];
   }
 }

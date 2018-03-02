@@ -1,7 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {ActiesModel, ActiesService} from '../acties.service';
-import {Subscription} from 'rxjs/Subscription';
-import {IAlert} from '../interface/IAlert';
+import {Component, OnInit} from '@angular/core';
+import {IActies} from '../interface/IActies';
+import {Observable} from 'rxjs/Observable';
+import {IAppState} from '../store/store';
+import {Store} from '@ngrx/store';
+import {UpdateActiesInProgress} from '../store/acties/acties.actions';
+import 'rxjs/add/operator/switchMap';
+import 'rxjs/add/operator/take';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-acties',
@@ -10,36 +15,20 @@ import {IAlert} from '../interface/IAlert';
 })
 export class ActiesComponent implements OnInit {
 
-  saveActiesSub: Subscription;
-  actiesSub: Subscription;
-  acties: ActiesModel = {};
+  acties$: Observable<IActies>;
+  acties: IActies;
 
-  constructor(private actiesService: ActiesService) { }
+  constructor(private store: Store<IAppState>) {
+  }
 
   ngOnInit() {
-    this.actiesSub = this.actiesService.getActies().subscribe(response => {
-      this.acties = response;
-    },
-      error => {
-     console.log('ophalen niet gelukt');
-      //   this.addAlert.emit({
-      //     message: 'Het ophalen van de acties is niet gelukt',
-      //     type: 'danger'});
-      });
+    this.acties$ = this.store.select('acties');
+    this.acties$.take(1).subscribe(acties => {
+      this.acties = _.cloneDeep(acties);
+    });
   }
 
   saveActies() {
-    this.saveActiesSub = this.actiesService.saveActies(this.acties).subscribe(response => {
-      console.log('saved actie');
-      // this.addAlert.emit({
-      //   message: 'Het opslaan van de acties is gelukt',
-      //   type: 'success'
-      },
-      error => {
-        console.log('opslaan mislukt');
-        // this.addAlert.emit({
-        //   message: 'Het opslaan van de acties is niet gelukt',
-        //   type: 'danger'});
-    });
+    this.store.dispatch(new UpdateActiesInProgress(this.acties));
   }
 }

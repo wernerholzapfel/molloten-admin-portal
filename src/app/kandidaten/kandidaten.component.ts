@@ -18,7 +18,6 @@ import {UpdateKandidaatInProgress} from '../store/kandidaten/kandidaten.actions'
 
 
 export class KandidatenComponent implements OnInit {
-  saveKandidatenSub: Subscription;
   kandidaten$: Observable<IKandidaat[]>;
   isEditActive: boolean;
   activeKandidaat: IKandidaat;
@@ -26,7 +25,7 @@ export class KandidatenComponent implements OnInit {
   @Output()
   addAlert: EventEmitter<IAlert> = new EventEmitter<IAlert>(); // creating an output event
 
-  constructor(private kandidatenService: KandidatenService, private store: Store<IAppState>) {
+  constructor(private store: Store<IAppState>) {
   }
 
   ngOnInit() {

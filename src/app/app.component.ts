@@ -2,10 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {AuthService} from './auth/auth.service';
 // import {NgRedux, select} from '@angular-redux/store';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {IAppState} from './store/store';
 import {FetchKandidatenInProgress} from './store/kandidaten/kandidaten.actions';
 import {FetchAfleveringenInProgress} from './store/afleveringen/afleveringen.actions';
-import {IAppState} from './store/store';
+import {FetchActiesInProgress} from './store/acties/acties.actions';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +21,7 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(new FetchAfleveringenInProgress());
     this.store.dispatch(new FetchKandidatenInProgress());
+    this.store.dispatch(new FetchActiesInProgress());
   }
 }
 
