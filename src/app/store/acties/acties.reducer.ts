@@ -5,6 +5,7 @@ import {
   UPDATE_ACTIES_FAILURE,
   UPDATE_ACTIES_SUCCESS
 } from './acties.actions';
+import {createFeatureSelector, State} from '@ngrx/store';
 
 export function actiesReducer(state: IActies, action) {
   switch (action.type) {
@@ -20,3 +21,5 @@ export function actiesReducer(state: IActies, action) {
       return {...state};
   }
 }
+
+export const getActies = createFeatureSelector<State>('acties');

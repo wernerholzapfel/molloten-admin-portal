@@ -7,6 +7,7 @@ import {afleveringenReducer} from './afleveringen/afleveringen.reducer';
 import {alertReducer} from './alerts/alerts.reducers';
 import {IActies} from '../interface/IActies';
 import {actiesReducer} from './acties/acties.reducer';
+import {ITestvragen, testvragenReducer} from './testvragen/testvragen.reducer';
 
 
 export interface IAppState {
@@ -14,11 +15,13 @@ export interface IAppState {
   afleveringen: IAflevering[];
   alerts: IAlert[];
   acties: IActies;
+  testvragen: ITestvragen;
 }
 
 export const reducers: ActionReducerMap<IAppState> = {
   kandidaten: kandidatenReducer,
   afleveringen: afleveringenReducer,
   alerts: alertReducer,
-  acties: actiesReducer
+  acties: actiesReducer,
+  testvragen: testvragenReducer
 };

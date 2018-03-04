@@ -9,10 +9,24 @@ export const UPDATE_AFLEVERING_IN_PROGRESS = 'UPDATE_AFLEVERING_IN_PROGRESS';
 export const UPDATE_AFLEVERING_SUCCESS = 'UPDATE_AFLEVERING_SUCCESS';
 export const UPDATE_AFLEVERING_FAILURE = 'UPDATE_AFLEVERING_FAILURE';
 
+
 export class FetchAfleveringenInProgress implements Action {
   readonly type = FETCH_AFLEVERINGEN_IN_PROGRESS;
 
   constructor() {
+  }
+}
+
+export class FetchAfleveringenSuccess implements Action {
+  readonly type = FETCH_AFLEVERINGEN_SUCCESS;
+
+  constructor(public payload: IKandidaat[]) {
+  }
+}
+export class FetchAfleveringenFailure implements Action {
+  readonly type = FETCH_AFLEVERINGEN_FAILURE;
+
+  constructor(public payload: any) {
   }
 }
 
@@ -37,16 +51,4 @@ export class UpdateAfleveringFailure implements Action {
   }
 }
 
-export class FetchAfleveringenSuccess implements Action {
-  readonly type = FETCH_AFLEVERINGEN_SUCCESS;
 
-  constructor(public payload: IKandidaat[]) {
-  }
-}
-
-export class FetchAfleveringenFailure implements Action {
-  readonly type = FETCH_AFLEVERINGEN_FAILURE;
-
-  constructor(public payload: any) {
-  }
-}

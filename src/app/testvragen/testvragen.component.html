@@ -1,7 +1,12 @@
+<!--{{this.kandidaten$ | async | json}}-->
+<!--{{afleveringen$ |async | json}}-->
+<!--{{this.acties$ |async | json}}-->
+<!--{{this.currentAflevering | json}}-->
+<!--{{this.kandidaten | json}}-->
 <div class="form-group">
   <label for="aflevering">Aflevering</label>
-  <select [disabled]="showEditVraag || showEditMenu" class="form-control" id="aflevering" #selectedAflevering (change)="fetchTestVragen(selectedAflevering.value)">
-    <option *ngFor="let aflevering of afleveringen" [value]="aflevering.aflevering">
+  <select [disabled]="showEditVraag || showEditMenu" class="form-control" id="aflevering" #selectedAflevering [(ngModel)]="currentAflevering" (change)="fetchTestvragenVoorAflevering()">
+    <option *ngFor="let aflevering of afleveringen$ | async" [selected]="aflevering.aflevering == currentAflevering" [value]="aflevering.aflevering">
       {{aflevering.aflevering}}
     </option>
   </select>
@@ -9,7 +14,7 @@
 
 
 <div *ngIf="!showEditMenu && !showEditVraag">
-  <table class="table" *ngIf="testVragen">
+  <table class="table" *ngIf="testVragen$">
     <thead>
     <tr>
       <th scope="col">Antwoord</th>
@@ -17,7 +22,7 @@
     </tr>
     </thead>
     <tbody>
-    <ng-container *ngFor="let vraag of testVragen let index =index;
+    <ng-container *ngFor="let vraag of testVragen$ |async let index =index;
             let isheaderOdd=odd;
             let isheaderEven=even">
       <tr [class.headerodd]="isheaderOdd"
@@ -39,7 +44,7 @@
   </table>
 
 </div>
-<button *ngIf="activeAflevering && !showEditMenu && !showEditVraag" type="button" class="btn btn-primary" (click)="addTestVraag()">Maak vraag voor aflevering {{activeAflevering}}</button>
+<button *ngIf="activeAflevering$ && !showEditMenu && !showEditVraag" type="button" class="btn btn-primary" (click)="addTestVraag()">Maak vraag voor aflevering {{activeAflevering$| async}}</button>
 
 <div *ngIf="showEditMenu">
   <table class="table">
@@ -83,7 +88,7 @@
       <label for="kandidaten[i]">Kandidaten</label>
       <select multiple class="form-control" id="kandidaten[i]" #selectedKandidaat[i]
               [(ngModel)]="form?.antwoorden[i].kandidaten">
-        <option *ngFor="let kandidaat of mutatedKandidaten" [value]="kandidaat">
+        <option *ngFor="let kandidaat of kandidaten" [value]="kandidaat">
           {{kandidaat.display_name}}
         </option>
       </select>
@@ -135,7 +140,7 @@
       <label for="editkandidaten[i]">Kandidaten</label>
       <select multiple class="form-control" id="editkandidaten[i]" #selectedKandidaat[i]
               [(ngModel)]="form?.antwoorden[i].kandidaten">
-        <option *ngFor="let kandidaat of mutatedKandidaten" [ngValue]="kandidaat">
+        <option *ngFor="let kandidaat of kandidaten" [ngValue]="kandidaat">
           {{kandidaat.display_name}}
         </option>
       </select>
@@ -144,7 +149,6 @@
   <button type="button" class="btn btn-primary" [disabled]="areAllKandidatenSelected()" (click)="addAntwoord()">+ Antwoord</button>
   <button type="button" class="btn btn-primary" (click)="cancelVraag()">Annuleren</button>
   <button type="button" class="btn btn-primary" [disabled]="!areAllKandidatenSelected()" (click)="updateTestVraag()">Update vraag</button>
-   {{mutatedKandidaten | json}}
-   {{kandidaten | json}}
+
 </div>
 

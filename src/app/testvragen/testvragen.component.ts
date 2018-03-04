@@ -1,11 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {Subscription} from 'rxjs/Subscription';
-import {KandidatenService} from '../kandidaten.service';
-import {AfleveringenService} from '../afleveringen.service';
-import {AntwoordModel, TestvraagModel, TestvragenService} from '../testvragen.service';
+import {AntwoordModel, TestvraagModel} from '../testvragen.service';
 import * as _ from 'lodash';
 import {IKandidaat} from '../interface/IKandidaat';
 import {IAflevering} from '../interface/IAflevering';
+import {Observable} from 'rxjs/Observable';
+import {IAppState} from '../store/store';
+import {Store} from '@ngrx/store';
+import {getActiveKandidaten} from '../store/kandidaten/kandidaten.reducer';
+import {
+  AddTestVraagInProgress,
+  FetchTestvragenInProgress,
+  SetAfleveringTestvragen,
+  UpdateTestVraagInProgress
+} from '../store/testvragen/testvragen.actions';
+import {getAfleveringVoorTestvragen, getTestvragen} from '../store/testvragen/testvragen.reducer';
+import {IActies} from '../interface/IActies';
 
 @Component({
   selector: 'app-testvragen',
@@ -13,19 +22,15 @@ import {IAflevering} from '../interface/IAflevering';
   styleUrls: ['./testvragen.component.css']
 })
 export class TestvragenComponent implements OnInit {
-  testvragenSub: Subscription;
-  kandidatenSub: Subscription;
+  kandidaten$: Observable<IKandidaat[]>;
   kandidaten: IKandidaat[];
-  mutatedKandidaten: IKandidaat[];
-  afleveringenSub: Subscription;
-  afleveringen: IAflevering[];
-  activeAflevering: number;
-  testVragen: any;
+  acties$: Observable<IActies>;
+  afleveringen$: Observable<IAflevering[]>;
+  activeAflevering$: Observable<number>;
+  testVragen$: Observable<TestvraagModel[]>;
+
   currentAflevering: number;
-  selection: any;
   form: TestvraagModel;
-  // vraagForm: TestvraagModel;
-  // antwoordForm: AntwoordModel[];
   defaultAntwoord: AntwoordModel = {
     antwoord: '',
     kandidaten: []
@@ -33,34 +38,25 @@ export class TestvragenComponent implements OnInit {
   showEditMenu: Boolean = false;
   showEditVraag: Boolean = false;
 
-  constructor(private kandidatenService: KandidatenService,
-              private afleveringenService: AfleveringenService,
-              private testvragenService: TestvragenService) {
+  constructor(private store: Store<IAppState>) {
   }
 
   ngOnInit() {
-    this.kandidatenSub = this.kandidatenService.getKandidaten().subscribe(response => {
-      this.kandidaten = response;
-    });
-    this.afleveringenSub = this.afleveringenService.getAfleveringen().subscribe(response => {
-      this.afleveringen = response;
-      this.fetchTestVragen(this.afleveringen[0].aflevering);
-    });
-
-
+    // todo prefill current aflevering
+    this.afleveringen$ = this.store.select('afleveringen');
+    this.testVragen$ = this.store.select(getTestvragen);
+    this.acties$ = this.store.select('acties');
+    this.kandidaten$ = this.store.select(getActiveKandidaten);
+    this.kandidaten$.subscribe(kandidaten => this.kandidaten = kandidaten);
+    this.activeAflevering$ = this.store.select(getAfleveringVoorTestvragen);
+    // this.acties$.take(1).subscribe(response => {
+    this.currentAflevering = 1;
+    this.store.dispatch(new FetchTestvragenInProgress(this.currentAflevering));
     this.resetTestvraagForm();
   }
 
-  fetchTestVragen(afleveringId) {
-    this.activeAflevering =  parseInt(afleveringId, 10);
-    this.form.aflevering =  parseInt(afleveringId, 10);
-    this.mutatedKandidaten = _.cloneDeep(this.kandidaten).filter(kandidaat => {
-      return kandidaat.aflevering > afleveringId || !kandidaat.aflevering;
-    });
-    this.testvragenSub = this.testvragenService.getTestvragen(afleveringId).subscribe(response => {
-      this.testVragen = response;
-    });
-    console.log(afleveringId);
+  fetchTestvragenVoorAflevering() {
+    this.store.dispatch(new FetchTestvragenInProgress(this.currentAflevering));
   }
 
   addAntwoord() {
@@ -83,63 +79,64 @@ export class TestvragenComponent implements OnInit {
 
   resetTestvraagForm() {
     this.form = {
-      aflevering: this.activeAflevering,
+      aflevering: parseInt(this.currentAflevering, 10),
+      vraag: '',
       antwoorden: [_.cloneDeep(this.defaultAntwoord)]
     };
   }
 
   saveTestVraag() {
-    this.testvragenService.saveTestvraag(this.form).subscribe(response => {
-      this.showEditMenu = false;
-      this.showEditVraag = false;
-      this.fetchTestVragen(this.activeAflevering);
-      this.resetTestvraagForm();
-    });
+    this.form = {
+      ...this.form,
+      aflevering: parseInt(this.currentAflevering, 10),
+    };
+
+    this.store.dispatch(new AddTestVraagInProgress(this.form));
+    this.showEditMenu = false;
+    this.showEditVraag = false;
+    this.resetTestvraagForm();
   }
 
   updateTestVraag() {
-    this.testvragenService.updateTestvraag(this.form).subscribe(response => {
-      this.showEditMenu = false;
-      this.showEditVraag = false;
-      this.fetchTestVragen(this.activeAflevering);
-      this.resetTestvraagForm();
-    });
+    this.store.dispatch(new UpdateTestVraagInProgress(this.form));
+    this.showEditMenu = false;
+    this.showEditVraag = false;
+    this.resetTestvraagForm();
   }
 
   editVraag(vraag: TestvraagModel) {
-    this.form = vraag;
-    this.mutatedKandidaten = _.cloneDeep(this.kandidaten).filter(kandidaat => {
-      return kandidaat.aflevering > vraag.aflevering || !kandidaat.aflevering;
-    });
+    this.form = _.cloneDeep(vraag);
+    // this.kandidaten$.take(1).subscribe(kandidaten => {
+    //   this.kandidaten = kandidaten;
+    // });
     this.showEditVraag = true;
-  }
-
-  updateVraag() {
-    this.testvragenService.updatevraag(this.form).subscribe(response => {
-      console.log('update gelukt');
-    });
   }
 
   areAllKandidatenSelected() {
     let selectedKandidaten = 0;
-    const activeKandidaten = _.cloneDeep(this.mutatedKandidaten);
-    this.form.antwoorden.forEach(antwoord => {
-      selectedKandidaten = selectedKandidaten + antwoord.kandidaten.length;
-      antwoord.kandidaten.forEach(kandidaat => {
-        const selectedKandidaat = _.find(activeKandidaten, {id: kandidaat.id});
-        if (selectedKandidaat) {
-          _.remove(activeKandidaten, {
-            id: selectedKandidaat.id
-          });
-          kandidaat.selected = true;
-          selectedKandidaat.selected = true;
-        }
+    let remainingKandidaten = 0;
+    let activeKandidaten = 0;
+    this.kandidaten$.take(1).subscribe(kandidaten => {
+      remainingKandidaten = _.cloneDeep(kandidaten);
+      activeKandidaten = _.cloneDeep(kandidaten);
+      this.form.antwoorden.forEach(antwoord => {
+        selectedKandidaten = selectedKandidaten + antwoord.kandidaten.length;
+        antwoord.kandidaten.forEach(kandidaat => {
+          const selectedKandidaat = _.find(remainingKandidaten, {id: kandidaat.id});
+          if (selectedKandidaat) {
+            _.remove(remainingKandidaten, {
+              id: selectedKandidaat.id
+            });
+            kandidaat.selected = true;
+            selectedKandidaat.selected = true;
+          }
+        });
       });
     });
-
-    return (this.mutatedKandidaten.length === selectedKandidaten
-      && activeKandidaten.length === 0
-      && this.form.vraag);
+    return (activeKandidaten.length === selectedKandidaten
+      && remainingKandidaten.length === 0
+      && this.form.vraag
+    );
   }
 }
 

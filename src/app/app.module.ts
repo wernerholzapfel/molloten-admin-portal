@@ -29,6 +29,7 @@ import {EffectsModule} from '@ngrx/effects';
 import {KandidatenEffects} from './store/kandidaten/kandidaten.effects';
 import {AfleveringenEffects} from './store/afleveringen/afleveringen.effects';
 import {ActiesEffects} from './store/acties/acties.effects';
+import {TestvragenEffects} from './store/testvragen/testvragen.effects';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
@@ -56,7 +57,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument(),
     // StoreRouterConnectingModule,
-    EffectsModule.forRoot([AfleveringenEffects, KandidatenEffects, ActiesEffects]),
+    EffectsModule.forRoot([AfleveringenEffects, KandidatenEffects, ActiesEffects, TestvragenEffects]),
 
   ],
   providers: [AuthService,

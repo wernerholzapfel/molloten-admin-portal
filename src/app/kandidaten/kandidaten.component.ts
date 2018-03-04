@@ -7,6 +7,7 @@ import {Observable} from 'rxjs/Observable';
 import {IAlert} from '../interface/IAlert';
 import {Subscription} from 'rxjs/Subscription';
 import {UpdateKandidaatInProgress} from '../store/kandidaten/kandidaten.actions';
+import {getKandidaten} from '../store/kandidaten/kandidaten.reducer';
 
 @Component({
   selector: 'app-kandidaten',
@@ -29,7 +30,7 @@ export class KandidatenComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.kandidaten$ = this.store.select('kandidaten');
+    this.kandidaten$ = this.store.select(getKandidaten);
   }
 
   saveKandidaat() {
