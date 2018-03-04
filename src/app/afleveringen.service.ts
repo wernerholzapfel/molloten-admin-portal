@@ -29,9 +29,8 @@ export class AfleveringenService {
       .map(res => <AfleveringModel[]>res.json());
   }
 
-  saveAflevering(aflevering: AfleveringModel): Observable<AfleveringModel> {
-    return this.authHttp.post(`${this.api}/afleveringen`, aflevering)
-      .map(res => <AfleveringModel>res.json());
+  saveAflevering(aflevering: AfleveringModel): Observable<any> {
+    return this.authHttp.post(`${this.api}/afleveringen`, aflevering);
   }
 
 }
