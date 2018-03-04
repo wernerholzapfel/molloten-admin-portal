@@ -1,0 +1,65 @@
+<table class="table" *ngIf="!isEditActive">
+  <thead>
+  <tr>
+    <th scope="col">Naam</th>
+    <th scope="col">Afl</th>
+    <th scope="col">is Mol</th>
+    <th scope="col">is afvaller</th>
+    <th scope="col">is winnaar</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let kandidaat of kandidaten let index =index;
+            let isvraagOdd=odd;
+            let isvraagEven=even"
+      [class.rowodd]="isvraagOdd"
+      [class.roweven]="isvraagEven">
+    <th scope="row">{{kandidaat.display_name}}</th>
+    <td>{{kandidaat.aflevering}}</td>
+    <td>{{kandidaat.mol ? 'Ja' : '-'}}</td>
+    <td>{{kandidaat.afgevallen ? 'Ja' : '-'}}</td>
+    <td>{{kandidaat.winner ? 'Ja' : '-'}}</td>
+    <td>
+      <button type="button" class="btn btn-primary" (click)="editKandidaat(kandidaat)">Edit</button>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+
+<div *ngIf="isEditActive">
+  <form (ngSubmit)="saveKandidaat(activeKandidaat)">
+    <div class="form-group">
+      <label for="display_name">Naam</label>
+      <input type="text" class="form-control" id="display_name" [(ngModel)]="activeKandidaat.display_name" name="display_name">
+    </div>
+    <div class="form-group">
+      <label for="aflevering">Aflevering</label>
+      <input type="number" min="0" max="10" class="form-control" id="aflevering" [(ngModel)]="activeKandidaat.aflevering" name="aflevering">
+    </div>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" [(ngModel)]="activeKandidaat.mol" name="isMol">
+        Mol
+      </label>
+    </div>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" [(ngModel)]="activeKandidaat.afgevallen" name="isAfvaller">
+        Afvaller
+      </label>
+    </div>
+    <div class="form-check">
+      <label class="form-check-label">
+        <input type="checkbox" class="form-check-input" [(ngModel)]="activeKandidaat.winner" name="isWinner">
+        Winaar
+      </label>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-primary" (click)="cancelKandidaat()">Cancel</button>
+
+    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
+  </form>
+
+</div>

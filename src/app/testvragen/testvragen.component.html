@@ -1,0 +1,150 @@
+<div class="form-group">
+  <label for="aflevering">Aflevering</label>
+  <select [disabled]="showEditVraag || showEditMenu" class="form-control" id="aflevering" #selectedAflevering (change)="fetchTestVragen(selectedAflevering.value)">
+    <option *ngFor="let aflevering of afleveringen" [value]="aflevering.aflevering">
+      {{aflevering.aflevering}}
+    </option>
+  </select>
+</div>
+
+
+<div *ngIf="!showEditMenu && !showEditVraag">
+  <table class="table" *ngIf="testVragen">
+    <thead>
+    <tr>
+      <th scope="col">Antwoord</th>
+      <th scope="col">Vraag/Kandidaten</th>
+    </tr>
+    </thead>
+    <tbody>
+    <ng-container *ngFor="let vraag of testVragen let index =index;
+            let isheaderOdd=odd;
+            let isheaderEven=even">
+      <tr [class.headerodd]="isheaderOdd"
+          [class.headereven]="isheaderEven">
+        <th scope="row"><button type="button" class="btn btn-primary" (click)="editVraag(vraag)">edit</button></th>
+        <th scope="row">{{vraag.vraag}}</th>
+
+      </tr>
+      <tr *ngFor="let antwoord of vraag.antwoorden let index =index;
+            let isvraagOdd=odd;
+            let isvraagEven=even"
+          [class.rowodd]="isvraagOdd"
+          [class.roweven]="isvraagEven">
+        <th scope="row">{{antwoord.antwoord}}</th>
+        <th scope="row"><span *ngFor="let kandidaat of antwoord.kandidaten">{{kandidaat.display_name}} </span></th>
+      </tr>
+    </ng-container>
+    </tbody>
+  </table>
+
+</div>
+<button *ngIf="activeAflevering && !showEditMenu && !showEditVraag" type="button" class="btn btn-primary" (click)="addTestVraag()">Maak vraag voor aflevering {{activeAflevering}}</button>
+
+<div *ngIf="showEditMenu">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Antwoord</th>
+      <th scope="col">Vraag/Kandidaten</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="headerodd">
+      <th></th>
+      <th scope="row">{{form.vraag}}</th>
+    </tr>
+    <tr *ngFor="let antwoord of form.antwoorden let index =index;
+            let isvraagOdd=odd;
+            let isvraagEven=even"
+        [class.rowodd]="isvraagOdd"
+        [class.roweven]="isvraagEven">
+      <th scope="row">{{antwoord.antwoord}}</th>
+      <th scope="row"><span *ngFor="let kandidaat of antwoord.kandidaten">{{kandidaat.display_name}} </span>
+        ({{antwoord.kandidaten.length}})
+      </th>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <div class="form-group">
+    <label for="vraag">Vraag</label>
+    <input type="text" class="form-control" id="vraag" [(ngModel)]="form.vraag" name="vraag">
+  </div>
+
+  <div *ngFor="let antwoord of form.antwoorden let i = index">
+    <div class="form-group">
+      <label for="antwoord[i]">Antwoord {{i+1}}</label>
+      <button *ngIf="!showEditVraag"  type="button" class="btn btn-secondary" (click)="deleteAntwoord(i)">delete hide</button>
+      <input type="text" class="form-control" id="antwoord[i]" [(ngModel)]="form.antwoorden[i].antwoord" name="antwoorden[i]">
+    </div>
+    <div class="form-group">
+      <label for="kandidaten[i]">Kandidaten</label>
+      <select multiple class="form-control" id="kandidaten[i]" #selectedKandidaat[i]
+              [(ngModel)]="form?.antwoorden[i].kandidaten">
+        <option *ngFor="let kandidaat of mutatedKandidaten" [value]="kandidaat">
+          {{kandidaat.display_name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary" [disabled]="areAllKandidatenSelected()" (click)="addAntwoord()">+ Antwoord</button>
+  <button type="button" class="btn btn-primary" (click)="cancelVraag()">Annuleren</button>
+  <button type="button" class="btn btn-primary" [disabled]="!areAllKandidatenSelected()" (click)="saveTestVraag()">Sla vraag op</button>
+</div>
+<div *ngIf="showEditVraag">
+  <table class="table">
+    <thead>
+    <tr>
+      <th scope="col">Vraag/Antwoord</th>
+      <th scope="col">Kandidaten</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr class="headerodd">
+      <th></th>
+      <th scope="row">{{form.vraag}}</th>
+    </tr>
+    <tr *ngFor="let antwoord of form.antwoorden let index =index;
+            let isvraagOdd=odd;
+            let isvraagEven=even"
+        [class.rowodd]="isvraagOdd"
+        [class.roweven]="isvraagEven">
+      <th scope="row">{{antwoord.antwoord}}</th>
+      <th scope="row"><span *ngFor="let kandidaat of antwoord.kandidaten">{{kandidaat.display_name}} </span>
+        ({{antwoord.kandidaten.length}})
+      </th>
+    </tr>
+    </tbody>
+  </table>
+
+
+  <div class="form-group">
+    <label for="vraag">Vraag</label>
+    <input type="text" class="form-control" id="editvraag" [(ngModel)]="form.vraag" name="vraag">
+  </div>
+
+  <div *ngFor="let antwoord of form.antwoorden let i = index">
+    <div class="form-group">
+      <label for="editantwoord[i]">Antwoord {{i+1}}</label>
+      <button type="button" *ngIf="!showEditVraag" class="btn btn-secondary" (click)="deleteAntwoord(i)">delete</button>
+      <input type="text" class="form-control" id="editantwoord[i]" [(ngModel)]="form.antwoorden[i].antwoord" name="editantwoorden[i]">
+    </div>
+    <div class="form-group">
+      <label for="editkandidaten[i]">Kandidaten</label>
+      <select multiple class="form-control" id="editkandidaten[i]" #selectedKandidaat[i]
+              [(ngModel)]="form?.antwoorden[i].kandidaten">
+        <option *ngFor="let kandidaat of mutatedKandidaten" [ngValue]="kandidaat">
+          {{kandidaat.display_name}}
+        </option>
+      </select>
+    </div>
+  </div>
+  <button type="button" class="btn btn-primary" [disabled]="areAllKandidatenSelected()" (click)="addAntwoord()">+ Antwoord</button>
+  <button type="button" class="btn btn-primary" (click)="cancelVraag()">Annuleren</button>
+  <button type="button" class="btn btn-primary" [disabled]="!areAllKandidatenSelected()" (click)="updateTestVraag()">Update vraag</button>
+   {{mutatedKandidaten | json}}
+   {{kandidaten | json}}
+</div>
+

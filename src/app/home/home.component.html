@@ -1,7 +1,28 @@
-<h4 *ngIf="auth.isAuthenticated()">
-  You are logged in!
-</h4>
-<h4 *ngIf="!auth.isAuthenticated()">
-  You are not logged in! Please <a (click)="auth.login()">Log In</a> to continue.
-</h4>
+<div *ngIf="!auth.isAuthenticated()">Log in</div>
 
+<p *ngFor="let alert of alerts">
+<ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
+</p>
+
+<ngb-tabset *ngIf="auth.isAuthenticated() && isAdmin">
+  <ngb-tab title="Kandidaten">
+    <ng-template ngbTabContent>
+      <app-kandidaten (addAlert)="addAlertTo($event)"></app-kandidaten>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Uitzending">
+    <ng-template ngbTabContent>
+    <app-afleveringen (addAlert)="addAlertTo($event)"></app-afleveringen>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Test">
+    <ng-template ngbTabContent>
+    <app-testvragen></app-testvragen>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Actie">
+    <ng-template ngbTabContent>
+    <app-acties (addAlert)="addAlertTo($event)"></app-acties>
+    </ng-template>
+  </ngb-tab>
+</ngb-tabset>

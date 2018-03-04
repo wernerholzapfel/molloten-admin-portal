@@ -2,3 +2,32 @@
 .btn-margin {
   margin-top: 7px
 }
+a {
+  color: #629fa1 !important;
+}
+
+.btn-primary {
+  color: #fff !important;
+  background-color: #629fa1 !important;
+  border-color: #629fa1 !important;
+}
+
+.headereven {
+  background-color: #b2d0d1;
+}
+
+.headerodd {
+  background-color: #b2d0d1;
+
+}
+
+.roweven {
+  background-color: #e5efef
+}
+
+.rowodd {
+  background-color: #f2f7f7
+}
+.nav-link.active {
+  background-color: #eee;
+}
