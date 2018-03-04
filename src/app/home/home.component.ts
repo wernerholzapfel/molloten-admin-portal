@@ -7,10 +7,23 @@ import { AuthService } from './../auth/auth.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
+  profile: any;
+  isAdmin: boolean;
 
   constructor(public auth: AuthService) { }
 
   ngOnInit() {
+    if (this.auth.userProfile) {
+      this.profile = this.auth.userProfile;
+      this.isAdmin = (this.auth.userProfile && this.auth.userProfile === 'werner.holzapfel@gmail.com');
+    } else {
+      this.auth.getProfile((err, profile) => {
+        this.profile = profile;
+        this.isAdmin = (profile && profile.name === 'werner.holzapfel@gmail.com');
+
+      });
+    }
+
   }
 
 }

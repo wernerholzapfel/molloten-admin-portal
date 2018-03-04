@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { AuthHttp } from 'angular2-jwt';
 import 'rxjs/add/operator/map';
 import {Observable} from 'rxjs/Observable';
+import {environment} from '../environments/environment';
 
 export interface KandidaatModel {
   'id'?: string;
@@ -17,7 +18,7 @@ export interface KandidaatModel {
 @Injectable()
 export class KandidatenService {
 
-  api = 'https://molapi.herokuapp.com/api/v1';
+  api = environment.api;
 
   constructor(private authHttp: AuthHttp) {
   }

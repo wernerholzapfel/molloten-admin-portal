@@ -1,0 +1,14 @@
+<form (ngSubmit)="saveActies()">
+
+  <div class="form-group">
+    <label for="voorspellingaflevering">voorspellingaflevering</label>
+    <input type="number" min="0" max="10" class="form-control" id="voorspellingaflevering"
+           [(ngModel)]="acties.voorspellingaflevering" name="voorspellingaflevering">
+  </div>
+  <div class="form-group">
+    <label for="testaflevering">testaflevering</label>
+    <input type="number" min="0" max="10" class="form-control" id="testaflevering" [(ngModel)]="acties.testaflevering"
+           name="testaflevering">
+  </div>
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>

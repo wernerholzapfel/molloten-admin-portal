@@ -1,19 +1,24 @@
 <div *ngIf="!auth.isAuthenticated()">Log in</div>
 
-<ngb-tabset *ngIf="auth.isAuthenticated()">
+<ngb-tabset *ngIf="auth.isAuthenticated() && isAdmin">
   <ngb-tab title="Kandidaten">
     <ng-template ngbTabContent>
       <app-kandidaten></app-kandidaten>
     </ng-template>
   </ngb-tab>
-  <ngb-tab title="Afleveringen">
+  <ngb-tab title="Uitzending">
     <ng-template ngbTabContent>
     <app-afleveringen></app-afleveringen>
     </ng-template>
   </ngb-tab>
-  <ngb-tab title="Test vragen">
+  <ngb-tab title="Test">
     <ng-template ngbTabContent>
     <app-testvragen></app-testvragen>
+    </ng-template>
+  </ngb-tab>
+  <ngb-tab title="Actie">
+    <ng-template ngbTabContent>
+    <app-acties></app-acties>
     </ng-template>
   </ngb-tab>
 </ngb-tabset>

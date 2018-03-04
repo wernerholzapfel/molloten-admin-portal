@@ -1,9 +1,9 @@
 <table class="table" *ngIf="!isEditActive">
   <thead>
   <tr>
-    <th scope="col">aflevering</th>
+    <th scope="col">Afl</th>
     <th scope="col">Deadline</th>
-    <th scope="col">is uitgezonden</th>
+    <th scope="col">Is Uitgezonden</th>
     <!--<th scope="col">heeft voorspelling</th>-->
     <!--<th scope="col">heeft test</th>-->
     <th scope="col">is laatste aflevering</th>
@@ -11,7 +11,11 @@
   </tr>
   </thead>
   <tbody>
-  <tr *ngFor="let aflevering of afleveringen">
+  <tr *ngFor="let aflevering of afleveringen let index =index;
+            let isvraagOdd=odd;
+            let isvraagEven=even"
+      [class.rowodd]="isvraagOdd"
+      [class.roweven]="isvraagEven">
     <th scope="row">{{aflevering.aflevering}}</th>
     <td>{{aflevering.deadlineDatetime | date:'d MMMM HH:mm'}}</td>
     <td>{{aflevering.uitgezonden ? 'Ja' : '-'}}</td>

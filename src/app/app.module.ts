@@ -19,6 +19,8 @@ import {AuthConfig, AuthHttp} from 'angular2-jwt';
 import {KandidatenService} from './kandidaten.service';
 import {TestvragenService} from './testvragen.service';
 import {AfleveringenService} from './afleveringen.service';
+import { ActiesComponent } from './acties/acties.component';
+import {ActiesService} from './acties.service';
 
 export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   return new AuthHttp(new AuthConfig({
@@ -33,7 +35,8 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     CallbackComponent,
     KandidatenComponent,
     AfleveringenComponent,
-    TestvragenComponent
+    TestvragenComponent,
+    ActiesComponent
   ],
   imports: [
     BrowserModule,
@@ -49,6 +52,7 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
       deps: [Http, RequestOptions]
     },
     KandidatenService,
+    ActiesService,
     TestvragenService,
     AfleveringenService
   ],
