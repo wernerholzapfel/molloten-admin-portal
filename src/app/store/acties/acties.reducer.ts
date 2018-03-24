@@ -22,4 +22,4 @@ export function actiesReducer(state: IActies, action) {
   }
 }
 
-export const getActies = createFeatureSelector<State>('acties');
+export const getActies = createFeatureSelector<IActies>('acties');

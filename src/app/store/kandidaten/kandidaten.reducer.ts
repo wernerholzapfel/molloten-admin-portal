@@ -20,7 +20,7 @@ export function kandidatenReducer(state: IKandidaat[] = [], action): IKandidaat[
 
 
 
-export const getKandidaten = createFeatureSelector<State>('kandidaten');
+export const getKandidaten = createFeatureSelector<IKandidaat[]>('kandidaten');
 
 export const getActiveKandidaten = createSelector(getKandidaten, getAfleveringVoorTestvragen, (kandidaten, aflevering) => {
   return kandidaten.filter(kandidaat => kandidaat.aflevering > aflevering || !kandidaat.aflevering);

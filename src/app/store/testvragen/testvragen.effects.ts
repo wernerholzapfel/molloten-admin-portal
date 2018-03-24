@@ -3,7 +3,7 @@ import {Actions, Effect} from '@ngrx/effects';
 import {
   ADD_TESTVRAAG_IN_PROGRESS,
   AddTestVraagInProgress,
-  AddTestVraagSuccess, DELETE_TESTVRAAG_IN_PROGRESS, DeleteTestVraagInProgress,
+  AddTestVraagSuccess,
   FETCH_TESTVRAGEN_IN_PROGRESS,
   FetchTestvragenFailure,
   FetchTestvragenInProgress,

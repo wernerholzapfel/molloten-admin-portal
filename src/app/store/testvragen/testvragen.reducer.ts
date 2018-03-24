@@ -1,17 +1,19 @@
 import {
-  ADD_TESTVRAAG_SUCCESS, DELETE_TESTVRAAG_SUCCESS, EDIT_TESTVRAAG_SUCCESS,
+  ADD_TESTVRAAG_SUCCESS,
   FETCH_TESTVRAGEN_FAILURE, FETCH_TESTVRAGEN_IN_PROGRESS, FETCH_TESTVRAGEN_SUCCESS,
-  SET_AFLEVERING_TESTVRAGEN, UPDATE_TESTVRAAG_SUCCESS
+  UPDATE_TESTVRAAG_SUCCESS
 } from './testvragen.actions';
 import {TestvraagModel} from '../../testvragen.service';
 import {createFeatureSelector, createSelector, State} from '@ngrx/store';
+import {Observable} from 'rxjs/Observable';
+import {IAppState} from '../store';
 
 export interface ITestvragen {
-  aflevering: number;
-  testvragen: TestvraagModel[];
+  aflevering?: number;
+  testvragen?: TestvraagModel[];
 }
 
-export function testvragenReducer(state: ITestvragen = {}, action): ITestvragen {
+export function testvragenReducer(state: ITestvragen, action): ITestvragen {
   switch (action.type) {
     case FETCH_TESTVRAGEN_IN_PROGRESS:
       return {
@@ -45,12 +47,9 @@ export function testvragenReducer(state: ITestvragen = {}, action): ITestvragen 
 }
 
 
-export const getTestvragenStore = createFeatureSelector<State>('testvragen');
+export const getTestvragenStore = createFeatureSelector<ITestvragen>('testvragen');
 
-export const getTestvragen: TestvraagModel[] = createSelector(getTestvragenStore, (testvragenstore) => {
-  return testvragenstore.testvragen;
-});
+export const getTestvragen = createSelector(getTestvragenStore, (testvragenstore: ITestvragen) => testvragenstore.testvragen);
 
-export const getAfleveringVoorTestvragen: number = createSelector(getTestvragenStore, (testvragenstore) => {
-  return testvragenstore.aflevering;
-});
+export const getAfleveringVoorTestvragen =
+  createSelector(getTestvragenStore, (testvragenstore) => testvragenstore.aflevering ? testvragenstore.aflevering : 1);

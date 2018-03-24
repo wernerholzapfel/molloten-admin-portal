@@ -10,7 +10,6 @@ import {getActiveKandidaten} from '../store/kandidaten/kandidaten.reducer';
 import {
   AddTestVraagInProgress,
   FetchTestvragenInProgress,
-  SetAfleveringTestvragen,
   UpdateTestVraagInProgress
 } from '../store/testvragen/testvragen.actions';
 import {getAfleveringVoorTestvragen, getTestvragen} from '../store/testvragen/testvragen.reducer';
@@ -43,15 +42,17 @@ export class TestvragenComponent implements OnInit {
 
   ngOnInit() {
     // todo prefill current aflevering
+
+    this.currentAflevering = 1;
+    this.store.dispatch(new FetchTestvragenInProgress(this.currentAflevering));
+
     this.afleveringen$ = this.store.select('afleveringen');
     this.testVragen$ = this.store.select(getTestvragen);
     this.acties$ = this.store.select('acties');
     this.kandidaten$ = this.store.select(getActiveKandidaten);
     this.kandidaten$.subscribe(kandidaten => this.kandidaten = kandidaten);
     this.activeAflevering$ = this.store.select(getAfleveringVoorTestvragen);
-    // this.acties$.take(1).subscribe(response => {
-    this.currentAflevering = 1;
-    this.store.dispatch(new FetchTestvragenInProgress(this.currentAflevering));
+    // this.acties$.take(1).subscribe(response => { this.resetTestvraagForm();
     this.resetTestvraagForm();
   }
 
@@ -79,7 +80,7 @@ export class TestvragenComponent implements OnInit {
 
   resetTestvraagForm() {
     this.form = {
-      aflevering: parseInt(this.currentAflevering, 10),
+      aflevering: this.currentAflevering,
       vraag: '',
       antwoorden: [_.cloneDeep(this.defaultAntwoord)]
     };
@@ -88,7 +89,7 @@ export class TestvragenComponent implements OnInit {
   saveTestVraag() {
     this.form = {
       ...this.form,
-      aflevering: parseInt(this.currentAflevering, 10),
+      aflevering: this.currentAflevering,
     };
 
     this.store.dispatch(new AddTestVraagInProgress(this.form));
@@ -114,8 +115,8 @@ export class TestvragenComponent implements OnInit {
 
   areAllKandidatenSelected() {
     let selectedKandidaten = 0;
-    let remainingKandidaten = 0;
-    let activeKandidaten = 0;
+    let remainingKandidaten: IKandidaat[] = [];
+    let activeKandidaten: IKandidaat[] = [];
     this.kandidaten$.take(1).subscribe(kandidaten => {
       remainingKandidaten = _.cloneDeep(kandidaten);
       activeKandidaten = _.cloneDeep(kandidaten);
