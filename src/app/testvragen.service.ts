@@ -16,6 +16,7 @@ export interface AntwoordModel {
   'id'?: number;
   'antwoord': string;
   'kandidaten': IKandidaat[];
+  'is_niet_meer_mogelijk_sinds'?: number;
 }
 
 @Injectable()

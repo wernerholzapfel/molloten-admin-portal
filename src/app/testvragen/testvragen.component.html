@@ -35,7 +35,8 @@
             let isvraagOdd=odd;
             let isvraagEven=even"
           [class.rowodd]="isvraagOdd"
-          [class.roweven]="isvraagEven">
+          [class.roweven]="isvraagEven"
+          [class.strikethrough]="antwoord.is_niet_meer_mogelijk_sinds">
         <th scope="row">{{antwoord.antwoord}}</th>
         <th scope="row"><span *ngFor="let kandidaat of antwoord.kandidaten">{{kandidaat.display_name}} </span></th>
       </tr>
@@ -59,7 +60,7 @@
       <th></th>
       <th scope="row">{{form.vraag}}</th>
     </tr>
-    <tr *ngFor="let antwoord of form.antwoorden let index =index;
+    <tr *ngFor="let antwoord of form.antwoorden let index = index;
             let isvraagOdd=odd;
             let isvraagEven=even"
         [class.rowodd]="isvraagOdd"

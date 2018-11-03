@@ -89,7 +89,7 @@ export class TestvragenComponent implements OnInit {
   saveTestVraag() {
     this.form = {
       ...this.form,
-      aflevering: this.currentAflevering,
+      aflevering: this.currentAflevering
     };
 
     this.store.dispatch(new AddTestVraagInProgress(this.form));
