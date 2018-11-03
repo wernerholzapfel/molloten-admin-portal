@@ -1,7 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {Http, HttpModule, RequestOptions} from '@angular/http';
 import {RouterModule} from '@angular/router';
 
 import {AppComponent} from './app.component';
@@ -15,7 +14,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {KandidatenComponent} from './kandidaten/kandidaten.component';
 import {AfleveringenComponent} from './afleveringen/afleveringen.component';
 import {TestvragenComponent} from './testvragen/testvragen.component';
-import {AuthConfig, AuthHttp} from 'angular2-jwt';
 import {KandidatenService} from './kandidaten.service';
 import {TestvragenService} from './testvragen.service';
 import {AfleveringenService} from './afleveringen.service';
@@ -30,11 +28,12 @@ import {KandidatenEffects} from './store/kandidaten/kandidaten.effects';
 import {AfleveringenEffects} from './store/afleveringen/afleveringen.effects';
 import {ActiesEffects} from './store/acties/acties.effects';
 import {TestvragenEffects} from './store/testvragen/testvragen.effects';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
+import {JwtModule} from '@auth0/angular-jwt';
+import {environment} from '../environments/environment';
 
-export function authHttpServiceFactory(http: Http, options: RequestOptions) {
-  return new AuthHttp(new AuthConfig({
-    tokenGetter: (() => localStorage.getItem('id_token'))
-  }), http, options);
+export function tokenGetter() {
+  return localStorage.getItem('id_token');
 }
 
 @NgModule({
@@ -50,22 +49,25 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     RouterModule.forRoot(ROUTES),
-    NgbModule.forRoot(),
-
+    NgbModule,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument(),
     // StoreRouterConnectingModule,
     EffectsModule.forRoot([AfleveringenEffects, KandidatenEffects, ActiesEffects, TestvragenEffects]),
-
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: [environment.api_domain],
+        // authScheme: 'JWT'
+        // blacklistedRoutes: ['localhost:3001/auth/']
+      }
+    })
   ],
-  providers: [AuthService,
-    {
-      provide: AuthHttp,
-      useFactory: authHttpServiceFactory,
-      deps: [Http, RequestOptions]
-    },
+  providers: [
+    AuthService,
+    HttpClient,
     KandidatenService,
     ActiesService,
     TestvragenService,

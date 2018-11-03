@@ -1,17 +1,14 @@
+import {take} from 'rxjs/operators';
 import {Component, OnInit} from '@angular/core';
 import {AntwoordModel, TestvraagModel} from '../testvragen.service';
 import * as _ from 'lodash';
 import {IKandidaat} from '../interface/IKandidaat';
 import {IAflevering} from '../interface/IAflevering';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {IAppState} from '../store/store';
 import {Store} from '@ngrx/store';
 import {getActiveKandidaten} from '../store/kandidaten/kandidaten.reducer';
-import {
-  AddTestVraagInProgress,
-  FetchTestvragenInProgress,
-  UpdateTestVraagInProgress
-} from '../store/testvragen/testvragen.actions';
+import {AddTestVraagInProgress, FetchTestvragenInProgress, UpdateTestVraagInProgress} from '../store/testvragen/testvragen.actions';
 import {getAfleveringVoorTestvragen, getTestvragen} from '../store/testvragen/testvragen.reducer';
 import {IActies} from '../interface/IActies';
 
@@ -117,7 +114,7 @@ export class TestvragenComponent implements OnInit {
     let selectedKandidaten = 0;
     let remainingKandidaten: IKandidaat[] = [];
     let activeKandidaten: IKandidaat[] = [];
-    this.kandidaten$.take(1).subscribe(kandidaten => {
+    this.kandidaten$.pipe(take(1)).subscribe(kandidaten => {
       remainingKandidaten = _.cloneDeep(kandidaten);
       activeKandidaten = _.cloneDeep(kandidaten);
       this.form.antwoorden.forEach(antwoord => {

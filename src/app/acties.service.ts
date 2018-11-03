@@ -1,26 +1,27 @@
+import {map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {AuthHttp} from 'angular2-jwt';
-import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Observable';
+
+import {Observable} from 'rxjs';
 import {environment} from '../environments/environment';
 import {IActies} from './interface/IActies';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class ActiesService {
 
   api = environment.api;
 
-  constructor(private authHttp: AuthHttp) {
+  constructor(private httpClient: HttpClient) {
   }
 
   getActies(): Observable<IActies> {
-    return this.authHttp.get(`${this.api}/acties`)
-      .map(res => <IActies>res.json());
+    return this.httpClient.get(`${this.api}/acties`).pipe(
+      map(res => <IActies>res));
   }
 
   saveActies(actie: IActies): Observable<IActies> {
-    return this.authHttp.post(`${this.api}/acties`, actie)
-      .map(res => <IActies>res.json());
+    return this.httpClient.post(`${this.api}/acties`, actie).pipe(
+      map(res => <IActies>res));
   }
 
 }

@@ -5,6 +5,7 @@
 
 export const environment = {
   production: true,
-  // api: 'http://localhost:3000/api/v1'
-  api: 'https://molapi.herokuapp.com/api/v1'
+  api: 'http://localhost:3000/api/v1',
+  api_domain: 'localhost:3000'
+  // api: 'https://molapi.herokuapp.com/api/v1'
 };

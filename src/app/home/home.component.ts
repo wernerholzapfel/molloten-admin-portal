@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {AuthService} from './../auth/auth.service';
+import {AuthService} from '../auth/auth.service';
 import {IAlert} from '../interface/IAlert';
 import {Store} from '@ngrx/store';
 import {IAppState} from '../store/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {DeleteAlert} from '../store/alerts/alerts.actions';
 
 @Component({

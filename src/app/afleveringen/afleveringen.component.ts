@@ -5,7 +5,7 @@ import {IAflevering} from '../interface/IAflevering';
 import {IAppState} from '../store/store';
 import {UpdateAfleveringInProgress} from '../store/afleveringen/afleveringen.actions';
 import {Store} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import * as _ from 'lodash';
 
 @Component({

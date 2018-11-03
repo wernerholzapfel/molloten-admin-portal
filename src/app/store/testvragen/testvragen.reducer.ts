@@ -1,12 +1,12 @@
 import {
   ADD_TESTVRAAG_SUCCESS,
-  FETCH_TESTVRAGEN_FAILURE, FETCH_TESTVRAGEN_IN_PROGRESS, FETCH_TESTVRAGEN_SUCCESS,
+  FETCH_TESTVRAGEN_FAILURE,
+  FETCH_TESTVRAGEN_IN_PROGRESS,
+  FETCH_TESTVRAGEN_SUCCESS,
   UPDATE_TESTVRAAG_SUCCESS
 } from './testvragen.actions';
 import {TestvraagModel} from '../../testvragen.service';
-import {createFeatureSelector, createSelector, State} from '@ngrx/store';
-import {Observable} from 'rxjs/Observable';
-import {IAppState} from '../store';
+import {createFeatureSelector, createSelector} from '@ngrx/store';
 
 export interface ITestvragen {
   aflevering?: number;

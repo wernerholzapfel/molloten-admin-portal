@@ -1,8 +1,9 @@
-import { Injectable } from '@angular/core';
-import {AuthHttp} from 'angular2-jwt';
-import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 import {IKandidaat} from './interface/IKandidaat';
 import {environment} from '../environments/environment';
+import {HttpClient} from '@angular/common/http';
 
 export interface TestvraagModel {
   id?: number;
@@ -23,33 +24,33 @@ export interface AntwoordModel {
 export class TestvragenService {
   api = environment.api;
 
-  constructor(private authHttp: AuthHttp) {
+  constructor(private httpClient: HttpClient) {
   }
 
   getTestvragen(afleveringId): Observable<TestvraagModel[]> {
-    return this.authHttp.get(`${this.api}/quizvragen/aflevering/${afleveringId}`)
-      .map(res => <TestvraagModel[]>res.json());
+    return this.httpClient.get(`${this.api}/quizvragen/aflevering/${afleveringId}`).pipe(
+      map(res => <TestvraagModel[]>res));
   }
 
 
   saveTestvraag(testVraag: TestvraagModel): Observable<TestvraagModel> {
-    return this.authHttp.post(`${this.api}/quizvragen`, testVraag)
-      .map(res => <TestvraagModel>res.json());
+    return this.httpClient.post(`${this.api}/quizvragen`, testVraag).pipe(
+      map(res => <TestvraagModel>res));
   }
 
   updateTestvraag(testVraag: TestvraagModel): Observable<TestvraagModel> {
-    return this.authHttp.post(`${this.api}/quizvragen/update`, testVraag)
-      .map(res => <TestvraagModel>res.json());
+    return this.httpClient.post(`${this.api}/quizvragen/update`, testVraag).pipe(
+      map(res => <TestvraagModel>res));
   }
 
   updatevraag(testVraag: TestvraagModel): Observable<TestvraagModel> {
-    return this.authHttp.post(`${this.api}/quizvragen/updatevraag`, testVraag)
-      .map(res => <TestvraagModel>res.json());
+    return this.httpClient.post(`${this.api}/quizvragen/updatevraag`, testVraag).pipe(
+      map(res => <TestvraagModel>res));
   }
 
   updateAntwoorden(antwoorden: AntwoordModel[]): Observable<TestvraagModel> {
-    return this.authHttp.post(`${this.api}/quizvragen/updateantwoorden`, antwoorden)
-      .map(res => <TestvraagModel>res.json());
+    return this.httpClient.post(`${this.api}/quizvragen/updateantwoorden`, antwoorden).pipe(
+      map(res => <TestvraagModel>res));
   }
 
 
