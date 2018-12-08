@@ -10,15 +10,14 @@
 
       <button
         class="btn btn-primary btn-margin"
-        *ngIf="!auth.isAuthenticated()"
-        (click)="auth.login()">
+        *ngIf="!authService.user$ | async">
           Log In
       </button>
 
       <button
         class="btn btn-primary btn-margin"
-        *ngIf="auth.isAuthenticated()"
-        (click)="auth.logout()">
+        *ngIf="authService.user$ | async"
+        (click)="authService.logout()">
           Log Out
       </button>
     </div>

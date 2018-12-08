@@ -31,6 +31,9 @@ import {TestvragenEffects} from './store/testvragen/testvragen.effects';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {JwtModule} from '@auth0/angular-jwt';
 import {environment} from '../environments/environment';
+import {LoginComponent} from './login/login.component';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFireAuthModule} from '@angular/fire/auth';
 
 export function tokenGetter() {
   return localStorage.getItem('id_token');
@@ -44,7 +47,8 @@ export function tokenGetter() {
     KandidatenComponent,
     AfleveringenComponent,
     TestvragenComponent,
-    ActiesComponent
+    ActiesComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -54,6 +58,8 @@ export function tokenGetter() {
     NgbModule,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument(),
+    AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
+    AngularFireAuthModule,
     // StoreRouterConnectingModule,
     EffectsModule.forRoot([AfleveringenEffects, KandidatenEffects, ActiesEffects, TestvragenEffects]),
     JwtModule.forRoot({
