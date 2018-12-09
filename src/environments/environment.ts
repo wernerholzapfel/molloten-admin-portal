@@ -15,5 +15,4 @@ export const environment = {
     storageBucket: 'molloot-8de9b.appspot.com',
     messagingSenderId: '663216627263'
   },
-  // api: 'https://molapi.herokuapp.com/api/v1'
 };

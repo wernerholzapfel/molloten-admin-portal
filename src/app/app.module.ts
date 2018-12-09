@@ -28,12 +28,12 @@ import {KandidatenEffects} from './store/kandidaten/kandidaten.effects';
 import {AfleveringenEffects} from './store/afleveringen/afleveringen.effects';
 import {ActiesEffects} from './store/acties/acties.effects';
 import {TestvragenEffects} from './store/testvragen/testvragen.effects';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {JwtModule} from '@auth0/angular-jwt';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {environment} from '../environments/environment';
 import {LoginComponent} from './login/login.component';
 import {AngularFireModule} from '@angular/fire';
 import {AngularFireAuthModule} from '@angular/fire/auth';
+import {TokenInterceptor} from './auth/token.interceptor';
 
 export function tokenGetter() {
   return localStorage.getItem('id_token');
@@ -61,15 +61,7 @@ export function tokenGetter() {
     AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
     AngularFireAuthModule,
     // StoreRouterConnectingModule,
-    EffectsModule.forRoot([AfleveringenEffects, KandidatenEffects, ActiesEffects, TestvragenEffects]),
-    JwtModule.forRoot({
-      config: {
-        tokenGetter: tokenGetter,
-        whitelistedDomains: [environment.api_domain],
-        // authScheme: 'JWT'
-        // blacklistedRoutes: ['localhost:3001/auth/']
-      }
-    })
+    EffectsModule.forRoot([AfleveringenEffects, KandidatenEffects, ActiesEffects, TestvragenEffects])
   ],
   providers: [
     AuthService,
@@ -77,7 +69,12 @@ export function tokenGetter() {
     KandidatenService,
     ActiesService,
     TestvragenService,
-    AfleveringenService
+    AfleveringenService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })
