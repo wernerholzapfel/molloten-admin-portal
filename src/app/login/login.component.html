@@ -1,0 +1,21 @@
+<div *ngIf="!(authService.user$ | async)">
+  <form class="login-form">
+    <input placeholder="Email" name="inlogEmail" [(ngModel)]="user.email">
+    <input type="password" autocomplete="password" name="inlogPassword" placeholder="Password"
+           [(ngModel)]="user.password">
+    <div class="form-group">
+      <div>
+        <button class="btn btn-primary btn-margin" (click)="signInWithEmail()"
+                [disabled]="!user.email || !user.password">
+          Inloggen
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<button class="btn btn-primary btn-margin" *ngIf="(authService.user$ | async)" (click)="logout()">Logout
+  {{(authService.user$ | async)?.displayName }}
+</button>
+
+

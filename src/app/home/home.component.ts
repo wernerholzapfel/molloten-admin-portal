@@ -1,6 +1,10 @@
-import {Component, OnInit} from '@angular/core';
-import {AuthService} from './../auth/auth.service';
-import {IAlert} from '../kandidaten/kandidaten.component';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {AuthService} from '../auth/auth.service';
+import {IAlert} from '../interface/IAlert';
+import {Store} from '@ngrx/store';
+import {IAppState} from '../store/store';
+import {Observable} from 'rxjs';
+import {DeleteAlert} from '../store/alerts/alerts.actions';
 
 @Component({
   selector: 'app-home',
@@ -9,32 +13,20 @@ import {IAlert} from '../kandidaten/kandidaten.component';
 })
 export class HomeComponent implements OnInit {
   profile: any;
-  isAdmin: boolean;
-  public alerts: Array<IAlert> = [];
+  alerts$: Observable<IAlert[]>;
+  changeDetection: ChangeDetectionStrategy.OnPush;
 
-  constructor(public auth: AuthService) {
+  constructor(public authService: AuthService, private store: Store<IAppState>) {
   }
 
   ngOnInit() {
-    if (this.auth.userProfile) {
-      this.profile = this.auth.userProfile;
-      this.isAdmin = this.auth.userProfile &&
-        (this.auth.userProfile === 'werner.holzapfel@gmail.com' || this.auth.userProfile === 'tom.dijkerman@gmail.com');
-    } else {
-      this.auth.getProfile((err, profile) => {
-        this.profile = profile;
-        this.isAdmin = profile &&
-          (profile.name === 'werner.holzapfel@gmail.com' || profile.name === 'tom.dijkerman@gmail.com');
-      });
-    }
+    this.alerts$ = this.store.select('alerts');
+    this.authService.user$.pipe().subscribe(response => {
+      this.profile = response;
+    });
   }
 
   public closeAlert(alert: IAlert) {
-    const index: number = this.alerts.indexOf(alert);
-    this.alerts.splice(index, 1);
-  }
-
-  public addAlertTo($event) {
-    this.alerts.push($event);
+    this.store.dispatch(new DeleteAlert(alert));
   }
 }

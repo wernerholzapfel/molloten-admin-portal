@@ -1,19 +1,9 @@
+import {map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {AuthHttp} from 'angular2-jwt';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {environment} from '../environments/environment';
-
-
-export interface AfleveringModel {
-  id: string;
-  aflevering: number;
-  laatseAflevering: boolean;
-  uitgezonden: boolean;
-  hasTest?: boolean;
-  hasVoorspelling?: boolean;
-  deadlineDatetime: string;
-
-}
+import {IAflevering} from './interface/IAflevering';
+import {HttpClient} from '@angular/common/http';
 
 
 @Injectable()
@@ -21,16 +11,16 @@ export class AfleveringenService {
 
   api = environment.api;
 
-  constructor(private authHttp: AuthHttp) {
+  constructor(private httpClient: HttpClient) {
   }
 
-  getAfleveringen(): Observable<AfleveringModel[]> {
-    return this.authHttp.get(`${this.api}/afleveringen`)
-      .map(res => <AfleveringModel[]>res.json());
+  getAfleveringen(): Observable<IAflevering[]> {
+    return this.httpClient.get(`${this.api}/afleveringen`).pipe(
+      map(res => <IAflevering[]>res));
   }
 
-  saveAflevering(aflevering: AfleveringModel): Observable<any> {
-    return this.authHttp.post(`${this.api}/afleveringen`, aflevering);
+  saveAflevering(aflevering: IAflevering): Observable<any> {
+    return this.httpClient.post(`${this.api}/afleveringen`, aflevering);
   }
 
 }

@@ -1,36 +1,27 @@
-import { Injectable } from '@angular/core';
-import { AuthHttp } from 'angular2-jwt';
-import 'rxjs/add/operator/map';
-import {Observable} from 'rxjs/Observable';
-import {environment} from '../environments/environment';
+import {map} from 'rxjs/operators';
+import {Injectable} from '@angular/core';
 
-export interface KandidaatModel {
-  'id'?: string;
-  'display_name'?: string;
-  'image_url'?: string;
-  'mol'?: boolean;
-  'winner'?: boolean;
-  'aflevering'?: number;
-  'afgevallen'?: boolean;
-  'selected'?: boolean;
-}
+import {Observable} from 'rxjs';
+import {environment} from '../environments/environment';
+import {IKandidaat} from './interface/IKandidaat';
+import {HttpClient} from '@angular/common/http';
 
 @Injectable()
 export class KandidatenService {
 
   api = environment.api;
 
-  constructor(private authHttp: AuthHttp) {
+  constructor(private httpClient: HttpClient) {
   }
 
-  getKandidaten(): Observable<KandidaatModel[]> {
-    return this.authHttp.get(`${this.api}/kandidaten`)
-      .map(res => <KandidaatModel[]>res.json());
+  getKandidaten(): Observable<IKandidaat[]> {
+    return this.httpClient.get(`${this.api}/kandidaten`).pipe(
+      map(res => <IKandidaat[]>res));
   }
 
-  saveKandidaat(kandidaat: KandidaatModel): Observable<KandidaatModel> {
-    return this.authHttp.post(`${this.api}/kandidaten`, kandidaat)
-      .map(res => <KandidaatModel>res.json());
+  saveKandidaat(kandidaat: IKandidaat): Observable<IKandidaat> {
+    return this.httpClient.post(`${this.api}/kandidaten`, kandidaat).pipe(
+      map(res => <IKandidaat>res));
   }
 
 }
