@@ -1,8 +1,9 @@
+import {map} from 'rxjs/operators';
 import {Injectable} from '@angular/core';
-import {AuthHttp} from 'angular2-jwt';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {environment} from '../environments/environment';
 import {IAflevering} from './interface/IAflevering';
+import {HttpClient} from '@angular/common/http';
 
 
 @Injectable()
@@ -10,16 +11,16 @@ export class AfleveringenService {
 
   api = environment.api;
 
-  constructor(private authHttp: AuthHttp) {
+  constructor(private httpClient: HttpClient) {
   }
 
   getAfleveringen(): Observable<IAflevering[]> {
-    return this.authHttp.get(`${this.api}/afleveringen`)
-      .map(res => <IAflevering[]>res.json());
+    return this.httpClient.get(`${this.api}/afleveringen`).pipe(
+      map(res => <IAflevering[]>res));
   }
 
   saveAflevering(aflevering: IAflevering): Observable<any> {
-    return this.authHttp.post(`${this.api}/afleveringen`, aflevering);
+    return this.httpClient.post(`${this.api}/afleveringen`, aflevering);
   }
 
 }

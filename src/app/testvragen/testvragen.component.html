@@ -38,7 +38,7 @@
           [class.roweven]="isvraagEven"
           [class.strikethrough]="antwoord.is_niet_meer_mogelijk_sinds">
         <th scope="row">{{antwoord.antwoord}}</th>
-        <th scope="row"><span *ngFor="let kandidaat of antwoord.kandidaten">{{kandidaat.display_name}} </span></th>
+        <th scope="row"><span  [class.strikethrough]="kandidaat.afgevallen" *ngFor="let kandidaat of antwoord.kandidaten let isLast=last">{{kandidaat.display_name}}{{isLast ? '' : ', '}} </span></th>
       </tr>
     </ng-container>
     </tbody>
@@ -66,7 +66,7 @@
         [class.rowodd]="isvraagOdd"
         [class.roweven]="isvraagEven">
       <th scope="row">{{antwoord.antwoord}}</th>
-      <th scope="row"><span *ngFor="let kandidaat of antwoord.kandidaten">{{kandidaat.display_name}} </span>
+      <th scope="row"><span *ngFor="let kandidaat of antwoord.kandidaten let isLast=last" >{{kandidaat.display_name}}{{isLast ? '' : ', '}} </span>
         ({{antwoord.kandidaten.length}})
       </th>
     </tr>
@@ -95,9 +95,9 @@
       </select>
     </div>
   </div>
-  <button type="button" class="btn btn-primary" [disabled]="areAllKandidatenSelected()" (click)="addAntwoord()">+ Antwoord</button>
-  <button type="button" class="btn btn-primary" (click)="cancelVraag()">Annuleren</button>
-  <button type="button" class="btn btn-primary" [disabled]="!areAllKandidatenSelected()" (click)="saveTestVraag()">Sla vraag op</button>
+  <button type="button" class="btn btn-primary btn-margin" [disabled]="areAllKandidatenSelected()" (click)="addAntwoord()">+ Antwoord</button>
+  <button type="button" class="btn btn-primary btn-margin" (click)="cancelVraag()">Annuleren</button>
+  <button type="button" class="btn btn-primary btn-margin" [disabled]="!areAllKandidatenSelected()" (click)="saveTestVraag()">Sla vraag op</button>
 </div>
 <div *ngIf="showEditVraag">
   <table class="table">
@@ -147,9 +147,9 @@
       </select>
     </div>
   </div>
-  <button type="button" class="btn btn-primary" [disabled]="areAllKandidatenSelected()" (click)="addAntwoord()">+ Antwoord</button>
-  <button type="button" class="btn btn-primary" (click)="cancelVraag()">Annuleren</button>
-  <button type="button" class="btn btn-primary" [disabled]="!areAllKandidatenSelected()" (click)="updateTestVraag()">Update vraag</button>
+  <button type="button" class="btn btn-primary btn-margin" [disabled]="areAllKandidatenSelected()" (click)="addAntwoord()">+ Antwoord</button>
+  <button type="button" class="btn btn-primary btn-margin" (click)="cancelVraag()">Annuleren</button>
+  <button type="button" class="btn btn-primary btn-margin" [disabled]="!areAllKandidatenSelected()" (click)="updateTestVraag()">Update vraag</button>
 
 </div>
 

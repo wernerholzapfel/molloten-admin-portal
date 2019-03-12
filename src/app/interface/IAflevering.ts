@@ -1,7 +1,7 @@
 export interface IAflevering {
   id: string;
   aflevering: number;
-  laatseAflevering: boolean;
+  laatsteAflevering: boolean;
   uitgezonden: boolean;
   hasTest?: boolean;
   hasVoorspelling?: boolean;

@@ -14,8 +14,7 @@ import {FetchActiesInProgress} from './store/acties/acties.actions';
 })
 export class AppComponent implements OnInit {
 
-  constructor(public auth: AuthService, private store: Store<IAppState>) {
-    auth.handleAuthentication();
+  constructor(public authService: AuthService, private store: Store<IAppState>) {
   }
 
   ngOnInit() {

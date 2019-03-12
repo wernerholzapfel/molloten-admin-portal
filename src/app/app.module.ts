@@ -1,7 +1,6 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms';
-import {Http, HttpModule, RequestOptions} from '@angular/http';
 import {RouterModule} from '@angular/router';
 
 import {AppComponent} from './app.component';
@@ -15,7 +14,6 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {KandidatenComponent} from './kandidaten/kandidaten.component';
 import {AfleveringenComponent} from './afleveringen/afleveringen.component';
 import {TestvragenComponent} from './testvragen/testvragen.component';
-import {AuthConfig, AuthHttp} from 'angular2-jwt';
 import {KandidatenService} from './kandidaten.service';
 import {TestvragenService} from './testvragen.service';
 import {AfleveringenService} from './afleveringen.service';
@@ -30,11 +28,15 @@ import {KandidatenEffects} from './store/kandidaten/kandidaten.effects';
 import {AfleveringenEffects} from './store/afleveringen/afleveringen.effects';
 import {ActiesEffects} from './store/acties/acties.effects';
 import {TestvragenEffects} from './store/testvragen/testvragen.effects';
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
+import {environment} from '../environments/environment';
+import {LoginComponent} from './login/login.component';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFireAuthModule} from '@angular/fire/auth';
+import {TokenInterceptor} from './auth/token.interceptor';
 
-export function authHttpServiceFactory(http: Http, options: RequestOptions) {
-  return new AuthHttp(new AuthConfig({
-    tokenGetter: (() => localStorage.getItem('id_token'))
-  }), http, options);
+export function tokenGetter() {
+  return localStorage.getItem('id_token');
 }
 
 @NgModule({
@@ -45,31 +47,34 @@ export function authHttpServiceFactory(http: Http, options: RequestOptions) {
     KandidatenComponent,
     AfleveringenComponent,
     TestvragenComponent,
-    ActiesComponent
+    ActiesComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     RouterModule.forRoot(ROUTES),
-    NgbModule.forRoot(),
-
+    NgbModule,
     StoreModule.forRoot(reducers),
     StoreDevtoolsModule.instrument(),
+    AngularFireModule.initializeApp(environment.firebase, 'angular-auth-firebase'),
+    AngularFireAuthModule,
     // StoreRouterConnectingModule,
-    EffectsModule.forRoot([AfleveringenEffects, KandidatenEffects, ActiesEffects, TestvragenEffects]),
-
+    EffectsModule.forRoot([AfleveringenEffects, KandidatenEffects, ActiesEffects, TestvragenEffects])
   ],
-  providers: [AuthService,
-    {
-      provide: AuthHttp,
-      useFactory: authHttpServiceFactory,
-      deps: [Http, RequestOptions]
-    },
+  providers: [
+    AuthService,
+    HttpClient,
     KandidatenService,
     ActiesService,
     TestvragenService,
-    AfleveringenService
+    AfleveringenService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })

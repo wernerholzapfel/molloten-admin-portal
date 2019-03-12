@@ -1,11 +1,12 @@
+import {take} from 'rxjs/operators';
 import {Component, OnInit} from '@angular/core';
 import {IActies} from '../interface/IActies';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 import {IAppState} from '../store/store';
 import {Store} from '@ngrx/store';
 import {UpdateActiesInProgress} from '../store/acties/acties.actions';
-import 'rxjs/add/operator/switchMap';
-import 'rxjs/add/operator/take';
+
+
 import * as _ from 'lodash';
 
 @Component({
@@ -23,7 +24,7 @@ export class ActiesComponent implements OnInit {
 
   ngOnInit() {
     this.acties$ = this.store.select('acties');
-    this.acties$.take(1).subscribe(acties => {
+    this.acties$.pipe(take(1)).subscribe(acties => {
       this.acties = _.cloneDeep(acties);
     });
   }

@@ -1,90 +1,72 @@
-import { Injectable } from '@angular/core';
-import { AUTH_CONFIG } from './auth0-variables';
-import { Router } from '@angular/router';
-import * as auth0 from 'auth0-js';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
+import {Router} from '@angular/router';
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+// import * as firebase from 'firebase';
+import {AngularFireAuth} from '@angular/fire/auth';
 
 @Injectable()
 export class AuthService {
+  public user$: Observable<firebase.User>;
+  public isAdmin = false;
 
-  auth0 = new auth0.WebAuth({
-    clientID: AUTH_CONFIG.clientID,
-    domain: AUTH_CONFIG.domain,
-    responseType: 'token id_token',
-    audience: `https://${AUTH_CONFIG.domain}/userinfo`,
-    redirectUri: AUTH_CONFIG.callbackURL,
-    scope: 'openid profile'
-  });
+  constructor(private _firebaseAuth: AngularFireAuth, private router: Router) {
+    this.user$ = _firebaseAuth.authState;
 
-  userProfile: any;
-
-  constructor(public router: Router) {}
-
-  public login(): void {
-    this.auth0.authorize((err, authResult) => {
-      console.log(authResult);
-    });
-  }
-
-  public handleAuthentication(): void {
-    this.auth0.parseHash((err, authResult) => {
-      if (authResult && authResult.accessToken && authResult.idToken) {
-        window.location.hash = '';
-        this.setSession(authResult);
-        this.router.navigate(['/home']);
-      } else if (err) {
-        this.router.navigate(['/home']);
-        console.log(err);
-        alert(`Error: ${err.error}. Check the console for further details.`);
+    this.user$.subscribe(user => {
+      if (user) {
+        this._firebaseAuth.auth.currentUser.getIdTokenResult(true).then(tokenResult => {
+          this.isAdmin = tokenResult.claims.admin;
+        });
       }
     });
   }
 
-  private setSession(authResult): void {
-    // Set the time that the access token will expire at
-    const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
-    localStorage.setItem('access_token', authResult.accessToken);
-    localStorage.setItem('id_token', authResult.idToken);
-    localStorage.setItem('expires_at', expiresAt);
-
+  signInRegular(email, password) {
+    const credential = firebase.auth.EmailAuthProvider.credential(email, password);
+    return this._firebaseAuth.auth.signInWithEmailAndPassword(email, password);
   }
 
-  public logout(): void {
-    // Remove tokens and expiry time from localStorage
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('id_token');
-    localStorage.removeItem('expires_at');
-    // Go back to the home route
-    this.router.navigate(['/']);
-  }
-
-  public isAuthenticated(): boolean {
-    // Check whether the current time is past the
-    // access token's expiry time
-    const expiresAt = JSON.parse(localStorage.getItem('expires_at'));
-    return new Date().getTime() < expiresAt;
-  }
-
-  public getProfile(cb): void {
-    if (this.isAuthenticated()) {
-    const accessToken = localStorage.getItem('access_token');
-    if (!accessToken) {
-      throw new Error('Access token must exist to fetch profile');
-    }
-
-    const self = this;
-    this.auth0.client.userInfo(accessToken, (err, profile) => {
-      if (profile) {
-        self.userProfile = profile;
-      }
-      cb(err, profile);
+  updateProfile(displayName: string) {
+    this.getToken().then(response => {
+      response.updateProfile({displayName: displayName});
     });
+  }
+
+  signUpRegular(email, password, displayName) {
+    return this._firebaseAuth.auth.createUserWithEmailAndPassword(email, password);
+  }
+
+  isLoggedIn() {
+    return this._firebaseAuth.authState;
+  }
+
+  logout() {
+    this._firebaseAuth.auth.signOut()
+      .then((res) =>
+        this.router.navigate(['/']));
+  }
+
+  getToken(): Promise<any> {
+    if (this._firebaseAuth.auth.currentUser) {
+      return this._firebaseAuth.auth.currentUser.getIdToken(true);
+    } else {
+      return Promise.resolve(false);
     }
   }
 
-  // public determineIfIsAdmin(): boolean {
-  //   return this.userProfile && this.userProfile.name === 'werner.holzapfel@gmail.com';
-  //   // return this.userProfile && this.userProfile.app_metadata
-  //   //   && this.userProfile.app_metadata.roles
-  //   //   && this.userProfile.app_metadata.roles.indexOf('admin') > -1;
-  // }
+  getTokenResult(): Promise<any> {
+    if (this._firebaseAuth.auth.currentUser) {
+      return this._firebaseAuth.auth.currentUser.getIdTokenResult(true);
+    } else {
+      return Promise.resolve(false);
+    }
+  }
+
+  sendPasswordResetEmail(email: string): Promise<any> {
+    return this._firebaseAuth.auth.sendPasswordResetEmail(email);
+  }
+
+
 }

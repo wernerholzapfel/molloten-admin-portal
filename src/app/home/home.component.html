@@ -1,10 +1,10 @@
-<div *ngIf="!auth.isAuthenticated()">Log in</div>
+<div *ngIf="!(authService.user$ | async)">Log in</div>
 
 <p *ngFor="let alert of alerts$ | async">
 <ngb-alert [type]="alert.type" (close)="closeAlert(alert)">{{ alert.message }}</ngb-alert>
 </p>
 
-<ngb-tabset *ngIf="auth.isAuthenticated() && isAdmin">
+<ngb-tabset *ngIf="(authService.user$ | async) && authService.isAdmin">
   <ngb-tab title="Kandidaten">
     <ng-template ngbTabContent>
       <app-kandidaten></app-kandidaten>
@@ -26,3 +26,5 @@
     </ng-template>
   </ngb-tab>
 </ngb-tabset>
+
+<app-login *ngIf="!(authService.user$ | async)"></app-login>

@@ -1,3 +1,4 @@
+<p></p>
 <table class="table" *ngIf="!isEditActive">
   <thead>
   <tr>
@@ -21,7 +22,7 @@
     <td>{{aflevering.uitgezonden ? 'Ja' : '-'}}</td>
     <!--<td>{{aflevering.hasVoorspelling ? 'Ja' : '-'}}</td>-->
     <!--<td>{{aflevering.hasTest ? 'Ja' : '-'}}</td>-->
-    <td>{{aflevering.laatseAflevering ? 'Ja' : '-'}}</td>
+    <td>{{aflevering.laatsteAflevering ? 'Ja' : '-'}}</td>
     <td>
       <button type="button" class="btn btn-primary" (click)="editAflevering(aflevering)">Edit</button>
     </td>
@@ -50,7 +51,7 @@
     </div>
     <div class="form-check">
       <label class="form-check-label">
-        <input type="checkbox" class="form-check-input" [(ngModel)]="activeAflevering.laatseAflevering" name="laatsteAflevering">
+        <input type="checkbox" class="form-check-input" [(ngModel)]="activeAflevering.laatsteAflevering" name="laatsteAflevering">
         Laatste Aflevering
       </label>
     </div>
@@ -66,10 +67,9 @@
         <!--Heeft test-->
       <!--</label>-->
     <!--</div>-->
-    <button type="submit" class="btn btn-primary">Save</button>
-    <button type="button" class="btn btn-primary" (click)="cancelAflevering()">Cancel</button>
+    <button type="submit" class="btn btn-primary btn-margin">Save</button>
+    <button type="button" class="btn btn-primary btn-margin" (click)="cancelAflevering()">Cancel</button>
 
-    <!--<button type="submit" class="btn btn-primary">Submit</button>-->
   </form>
 
 </div>
