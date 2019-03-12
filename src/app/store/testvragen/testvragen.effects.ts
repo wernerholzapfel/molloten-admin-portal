@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {
   ADD_TESTVRAAG_IN_PROGRESS,
   AddTestVraagInProgress,
@@ -22,8 +22,8 @@ export class TestvragenEffects {
 
   @Effect()
   fetchTestvragenInProgress$ = this.actions$
-    .ofType<FetchTestvragenInProgress>(FETCH_TESTVRAGEN_IN_PROGRESS)
     .pipe(
+      ofType<FetchTestvragenInProgress>(FETCH_TESTVRAGEN_IN_PROGRESS),
       map(action => action.payload),
       switchMap(aflevering => {
         return this.testvragenService
@@ -43,8 +43,8 @@ export class TestvragenEffects {
 
   @Effect()
   addTestVraagInProgress$ = this.actions$
-    .ofType<AddTestVraagInProgress>(ADD_TESTVRAAG_IN_PROGRESS)
     .pipe(
+      ofType<AddTestVraagInProgress>(ADD_TESTVRAAG_IN_PROGRESS),
       map(action => action.payload),
       switchMap(testvraag => {
         return this.testvragenService.saveTestvraag(testvraag)
@@ -61,9 +61,9 @@ export class TestvragenEffects {
 
   @Effect()
   updateTestVraagInProgress$ = this.actions$
-    .ofType<UpdateTestVraagInProgress>(UPDATE_TESTVRAAG_IN_PROGRESS)
     .pipe(
-      map(action => action.payload),
+      ofType<UpdateTestVraagInProgress>(UPDATE_TESTVRAAG_IN_PROGRESS),
+  map(action => action.payload),
       switchMap(testvraag => {
         return this.testvragenService.updateTestvraag(testvraag)
           .pipe(

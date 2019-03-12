@@ -5,7 +5,7 @@
            [(ngModel)]="user.password">
     <div class="form-group">
       <div>
-        <button color="primary" (click)="signInWithEmail()"
+        <button class="btn btn-primary btn-margin" (click)="signInWithEmail()"
                 [disabled]="!user.email || !user.password">
           Inloggen
         </button>
@@ -14,7 +14,7 @@
   </form>
 </div>
 
-<button color="primary" *ngIf="(authService.user$ | async)" (click)="logout()">Logout
+<button class="btn btn-primary btn-margin" *ngIf="(authService.user$ | async)" (click)="logout()">Logout
   {{(authService.user$ | async)?.displayName }}
 </button>
 

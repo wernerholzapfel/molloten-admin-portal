@@ -13,7 +13,7 @@ import {
   UpdateAfleveringInProgress,
   UpdateAfleveringSuccess
 } from './afleveringen.actions';
-import {Actions, Effect} from '@ngrx/effects';
+import {Actions, Effect, ofType} from '@ngrx/effects';
 import {AfleveringenService} from '../../afleveringen.service';
 import {Injectable} from '@angular/core';
 import {IAflevering} from '../../interface/IAflevering';
@@ -24,37 +24,37 @@ export class AfleveringenEffects {
 
   @Effect()
   fetchAfleveringenInProgress$ = this.actions$
-    .ofType<FetchAfleveringenInProgress>(FETCH_AFLEVERINGEN_IN_PROGRESS).pipe(
-    switchMap(action => {
-      return this.afleveringenService
-        .getAfleveringen().pipe(
-        switchMap(response =>
-          observableOf(new FetchAfleveringenSuccess(response))
-        ),
-        catchError(err =>
-          observableFrom([
-            new FetchAfleveringenFailure(err)
-          ])));
-    }));
+    .pipe(ofType<FetchAfleveringenInProgress>(FETCH_AFLEVERINGEN_IN_PROGRESS),
+      switchMap(action => {
+        return this.afleveringenService
+          .getAfleveringen().pipe(
+            switchMap(response =>
+              observableOf(new FetchAfleveringenSuccess(response))
+            ),
+            catchError(err =>
+              observableFrom([
+                new FetchAfleveringenFailure(err)
+              ])));
+      }));
 
   @Effect()
   updateAfleveringInProgress$ = this.actions$
-    .ofType<UpdateAfleveringInProgress>(UPDATE_AFLEVERING_IN_PROGRESS)
-    .pipe(map(action => action.payload),
-    switchMap((aflevering: IAflevering) => {
-      return this.afleveringenService
-        .saveAflevering(aflevering).pipe(
-        switchMap(() =>
-          observableFrom([
-            new UpdateAfleveringSuccess(aflevering),
-            new AddAlert({type: 'success', message: 'Opslaan van aflevering gelukt', err: undefined})
-          ])),
-        catchError(err =>
-          observableFrom([
-            new UpdateAfleveringFailure(),
-            new AddAlert({type: 'danger', message: 'Het updaten van de aflevering is mislukt.', err: err})
-          ])));
-    }));
+    .pipe(ofType<UpdateAfleveringInProgress>(UPDATE_AFLEVERING_IN_PROGRESS),
+      map(action => action.payload),
+      switchMap((aflevering: IAflevering) => {
+        return this.afleveringenService
+          .saveAflevering(aflevering).pipe(
+            switchMap(() =>
+              observableFrom([
+                new UpdateAfleveringSuccess(aflevering),
+                new AddAlert({type: 'success', message: 'Opslaan van aflevering gelukt', err: undefined})
+              ])),
+            catchError(err =>
+              observableFrom([
+                new UpdateAfleveringFailure(),
+                new AddAlert({type: 'danger', message: 'Het updaten van de aflevering is mislukt.', err: err})
+              ])));
+      }));
 
   constructor(private actions$: Actions,
               private afleveringenService: AfleveringenService) {
